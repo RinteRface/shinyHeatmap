@@ -23,7 +23,8 @@ heatmap_deps <- function() {
     name = "heatmap.js",
     version = "2.0.5",
     src = c(file = "heatmap.js-2.0.5"),
-    script = c("heatmap.min.js", "shiny-heatmap.js")
+    script = c("heatmap.min.js", "shiny-heatmap.js"),
+    package = "shinyHeatmap"
   )
 }
 
@@ -38,7 +39,7 @@ heatmap_deps <- function() {
 #'
 #' @export
 #' @importFrom shiny observeEvent 
-#' @importFrom jsonlite fromJSON
+#' @importFrom jsonlite fromJSON toJSON
 record_heatmap <- function(
     path = "www/heatmap-data.json",
     session = shiny::getDefaultReactiveDomain()
@@ -61,6 +62,18 @@ record_heatmap <- function(
         value = input$heatmap_data$value
       )
     }
+    
+    # convert data to JSON and save them to disk
+    session$userData$heatmap_json <- toJSON(
+      session$userData$heatmap, 
+      auto_unbox = TRUE, 
+      pretty = TRUE
+    )
+    
+    con <- file(path, open = "w")
+    # update JSON file
+    write(session$userData$heatmap_json, path)
+    close(con)
   }, ignoreNULL = FALSE)
 }
 
@@ -74,24 +87,17 @@ record_heatmap <- function(
 #' @param session Shiny session object.
 #'
 #' @export
-#' @importFrom jsonlite toJSON
 #' @importFrom shinyscreenshot screenshot
+#' @importFrom jsonlite read_json toJSON
 download_heatmap <- function(
     path = "www/heatmap-data.json",
     filename = "heatmap.png", 
     session = shiny::getDefaultReactiveDomain()
 ) {
-  data <- toJSON(
-    session$userData$heatmap, 
-    auto_unbox = TRUE, 
-    pretty = TRUE
+  session$sendCustomMessage(
+    "add_heatmap_data", 
+    toJSON(read_json(path), auto_unbox = TRUE)
   )
-  
-  con <- file(path, open = "w")
-  # update JSON file
-  write(data, path)
-  close(con)
-  session$sendCustomMessage("add_heatmap_data", data)
   # take screenshot
   screenshot(scale = 1, filename = filename)
   Sys.sleep(1)

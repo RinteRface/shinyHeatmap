@@ -1,9 +1,12 @@
 Package: shinyHeatmap
-Title: What the Package Does (One Line, Title Case)
+Title: Usage Heatmap for Shiny apps
 Version: 0.0.0.9000
 Authors@R: 
     person("David", "Granjon", , "dgranjon@ymail.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: Have you ever wondered how people are enjoying your Shiny app?
+    This package leverages 'heatmap.js' to provide heatmap of usage. You can
+    seamlessly know where users clicked and how many times. This is useful for
+    regression testing. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

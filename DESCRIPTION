@@ -14,3 +14,5 @@ Imports:
     jsonlite,
     shiny,
     shinyscreenshot
+URL: https://github.com/RinteRface/shinyHeatmap
+BugReports: https://github.com/RinteRface/shinyHeatmap/issues

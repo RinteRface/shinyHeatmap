@@ -9,13 +9,7 @@
 #' @export
 heatmap_container <- function(...){
   tagList(
-    div(
-      id = "heatmapContainerWrapper",
-      div(
-        id = "heatmapContainer",
-        ...
-      )
-    ),
+    ...,
     heatmap_deps()
   )
 }
@@ -29,8 +23,7 @@ heatmap_deps <- function() {
     name = "heatmap.js",
     version = "2.0.5",
     src = c(file = "heatmap.js-2.0.5"),
-    script = c("heatmap.min.js", "shiny-heatmap.js"),
-    stylesheet = "style.css"
+    script = c("heatmap.min.js", "shiny-heatmap.js")
   )
 }
 
@@ -85,7 +78,7 @@ record_heatmap <- function(
 #' @importFrom shinyscreenshot screenshot
 download_heatmap <- function(
     path = "www/heatmap-data.json",
-    filename = "www/heatmap.png", 
+    filename = "heatmap.png", 
     session = shiny::getDefaultReactiveDomain()
 ) {
   data <- toJSON(
@@ -101,6 +94,6 @@ download_heatmap <- function(
   session$sendCustomMessage("add_heatmap_data", data)
   # take screenshot
   screenshot(scale = 1, filename = filename)
-  Sys.sleep(2)
+  Sys.sleep(1)
   session$sendCustomMessage("remove_heatmap", TRUE)
 }

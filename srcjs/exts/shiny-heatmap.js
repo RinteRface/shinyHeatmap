@@ -1,12 +1,12 @@
 import 'shiny';
 
 window.onload = function() {
+  var heatmapContainer = document.querySelector(".container-fluid");
   var heatmap;
-  var heatmapContainer = document.getElementById('heatmapContainerWrapper');
   heatmapContainer.onclick = function(e) {
     var tmp_data = {
-      x: e.layerX,
-      y: e.layerY,
+      x: e.pageX,
+      y: e.pageY,
       value: 1
     };
     Shiny.setInputValue('heatmap_data', tmp_data);
@@ -14,15 +14,13 @@ window.onload = function() {
   
   Shiny.addCustomMessageHandler('add_heatmap_data', function(data) {
     heatmap = h337.create({
-      container: document.getElementById('heatmapContainer'),
-      radius: 90
-    });
-    heatmap.setData({
-      data: data
-    });
+    container: heatmapContainer//,
+    //radius: 90
+  });
+    heatmap.setData({data: data});
   });
   
   Shiny.addCustomMessageHandler('remove_heatmap', function(data) {
-    document.getElementsByClassName("heatmap-canvas")[0].remove();
+    document.querySelector(".heatmap-canvas").remove();
   });
 };

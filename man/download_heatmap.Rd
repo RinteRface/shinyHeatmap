@@ -6,7 +6,7 @@
 \usage{
 download_heatmap(
   path = "www/heatmap-data.json",
-  filename = "www/heatmap.png",
+  filename = "heatmap.png",
   session = shiny::getDefaultReactiveDomain()
 )
 }

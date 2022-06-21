@@ -21,13 +21,6 @@ devtools::install_github("RinteRface/shinyHeatmap")
 
 ## Example
 
-This is a basic example which shows you how to setup a heatmap:
-
-``` r
-library(shiny)
-runGitHub("shinyHeatmap", "RinteRface", "inst/demo/basic")
-```
-
 ### How to use it
 
 - The app must have a `www` folder since 

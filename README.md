@@ -28,7 +28,7 @@ heatmap data are stored in `www/heatmap-data.json` by default.
 - In `ui.R`, wrap the UI inside `heatmap_container()`. This setup the canvas
 to record the click coordinates.
 - In `server.R`, call `record_heatmap()`. Overall, this recovers the
-coordinates of each click on the JS side and store them on in `www/heatmap-data.json`.
+coordinates of each click on the JS side and store them in `www/heatmap-data.json`.
 This may be used later to preview the heatmap.
 - Locally, you can add `download_heatmap()` to your app, which will read data stored
 in the JSON, generate the heatmap and save it as a png file:

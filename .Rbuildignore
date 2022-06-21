@@ -8,3 +8,4 @@
 ^webpack\.prod\.js$
 ^webpack\.common\.js$
 ^\.github$
+^LICENSE\.md$

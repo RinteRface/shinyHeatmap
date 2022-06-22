@@ -2,12 +2,14 @@
 % Please edit documentation in R/heatmap.R
 \name{download_heatmap}
 \alias{download_heatmap}
-\title{Show recorder heatmap}
+\title{Show recorded heatmap}
 \usage{
 download_heatmap(
   path = "www/heatmap-data.json",
   filename = "heatmap.png",
-  session = shiny::getDefaultReactiveDomain()
+  session = shiny::getDefaultReactiveDomain(),
+  clean = TRUE,
+  options = NULL
 )
 }
 \arguments{
@@ -16,7 +18,13 @@ download_heatmap(
 \item{filename}{Screenshot file name.}
 
 \item{session}{Shiny session object.}
+
+\item{clean}{Whether to clean the heatmap. This allows to click
+on the UI again and generate a new heatmap. Default to TRUE.}
+
+\item{options}{Slot for heatmap options.
+See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.}
 }
 \description{
-Require to have \link{record_heatmap} data.
+Show and download \link{record_heatmap} data.
 }

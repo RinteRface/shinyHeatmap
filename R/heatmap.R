@@ -84,12 +84,7 @@ record_heatmap <- function(
     }
     
     # convert data to JSON and save them to disk
-    session$userData$heatmap_json <- toJSON(
-      session$userData$heatmap, 
-      auto_unbox = TRUE, 
-      pretty = TRUE
-    )
-    
+    session$userData$heatmap_json <- toJSON(session$userData$heatmap)
     con <- file(path, open = "w")
     # update JSON file
     write(session$userData$heatmap_json, path)
@@ -98,13 +93,17 @@ record_heatmap <- function(
 }
 
 
-#' Show recorder heatmap
+#' Show recorded heatmap
 #' 
-#' Require to have \link{record_heatmap} data.
+#' Show and download \link{record_heatmap} data.
 #' 
 #' @param path Previously saved heatmap data for persistence.
 #' @param filename Screenshot file name.
 #' @param session Shiny session object.
+#' @param clean Whether to clean the heatmap. This allows to click
+#' on the UI again and generate a new heatmap. Default to TRUE.
+#' @param options Slot for heatmap options. 
+#' See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.
 #'
 #' @export
 #' @importFrom shinyscreenshot screenshot
@@ -112,14 +111,23 @@ record_heatmap <- function(
 download_heatmap <- function(
     path = "www/heatmap-data.json",
     filename = "heatmap.png", 
-    session = shiny::getDefaultReactiveDomain()
+    session = shiny::getDefaultReactiveDomain(),
+    clean = TRUE,
+    options = NULL
 ) {
   session$sendCustomMessage(
     "add_heatmap_data", 
-    toJSON(read_json(path), auto_unbox = TRUE)
+    list(
+      data = toJSON(
+        read_json(path), 
+        auto_unbox = TRUE, 
+        pretty = TRUE
+      ),
+      options = options
+    )
   )
   # take screenshot
   screenshot(scale = 1, filename = filename)
   Sys.sleep(1)
-  session$sendCustomMessage("remove_heatmap", TRUE)
+  if (clean) session$sendCustomMessage("remove_heatmap", TRUE)
 }

@@ -2,11 +2,11 @@ import 'shiny';
 import $ from "jquery";
 
 $(document).ready(function(){
-  var heatmap, heatmapContainer;
+  var heatmap, heatmapContainer, heatmapConfig;
   
-  Shiny.addCustomMessageHandler('initialize_container', function(data) {
+  Shiny.addCustomMessageHandler('initialize_container', function(m) {
     setTimeout(function() {
-      heatmapContainer = document.querySelector(data.target);
+      heatmapContainer = document.querySelector(m.target);
       heatmapContainer.onclick = function(e) {
         var tmp_data = {
           x: e.pageX,
@@ -15,18 +15,17 @@ $(document).ready(function(){
         };
         Shiny.setInputValue('heatmap_data', tmp_data);
       };
-    }, data.timeout);
+    }, m.timeout);
   });
   
-  Shiny.addCustomMessageHandler('add_heatmap_data', function(data) {
-    heatmap = h337.create({
-      container: heatmapContainer//,
-    //radius: 90
-    });
-    heatmap.setData({data: data});
+  Shiny.addCustomMessageHandler('add_heatmap_data', function(m) {
+    heatmapConfig = m.options;
+    heatmapConfig.container = heatmapContainer;
+    heatmap = h337.create(heatmapConfig);
+    heatmap.setData({data: m.data});
   });
   
-  Shiny.addCustomMessageHandler('remove_heatmap', function(data) {
+  Shiny.addCustomMessageHandler('remove_heatmap', function(m) {
     document.querySelector(".heatmap-canvas").remove();
   });
 });

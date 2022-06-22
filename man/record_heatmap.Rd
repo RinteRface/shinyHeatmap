@@ -6,11 +6,20 @@
 \usage{
 record_heatmap(
   path = "www/heatmap-data.json",
+  target = ".container-fluid",
+  timeout = 10,
   session = shiny::getDefaultReactiveDomain()
 )
 }
 \arguments{
 \item{path}{Previously saved heatmap data for persistence.}
+
+\item{target}{Container selector hosting the heatmap canvas.
+Default to Shiny fluidPage container. Be careful to change it if
+you use another template.}
+
+\item{timeout}{Necessary if the page needs time to load.
+Expressed in milliseconds.}
 
 \item{session}{Shiny session object. Useful to store heatmap data.}
 }

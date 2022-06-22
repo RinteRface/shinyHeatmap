@@ -8,7 +8,8 @@
 The goal of shinyHeatmap is to ease Shiny app usage tracking by providing visual heatmap of
 app usage across many user sessions.
 
-<img src="man/figures/shinyHeatmap-basic.png" width="848" height="530">
+<img src="man/figures/shinyHeatmap-basic.png">
+<img src="man/figures/shinyHeatmap-bs4Dash.png">
 
 ## Installation
 

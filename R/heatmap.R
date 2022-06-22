@@ -35,6 +35,11 @@ heatmap_deps <- function() {
 #' to the file
 #' 
 #' @param path Previously saved heatmap data for persistence.
+#' @param target Container selector hosting the heatmap canvas.
+#' Default to Shiny fluidPage container. Be careful to change it if
+#' you use another template.
+#' @param timeout Necessary if the page needs time to load. 
+#' Expressed in milliseconds.
 #' @param session Shiny session object. Useful to store heatmap data.
 #'
 #' @export
@@ -42,10 +47,24 @@ heatmap_deps <- function() {
 #' @importFrom jsonlite fromJSON toJSON
 record_heatmap <- function(
     path = "www/heatmap-data.json",
+    target = ".container-fluid", 
+    timeout = 10,
     session = shiny::getDefaultReactiveDomain()
 ) {
   input <- get("input", envir = parent.frame(n = 1))
   
+  # init heatmap container
+  observeEvent(TRUE, {
+    session$sendCustomMessage(
+      "initialize_container", 
+      list(
+        target = target,
+        timeout = timeout
+      )
+    )
+  }, once = TRUE)
+  
+  # Record new data
   observeEvent({
     input$heatmap_data
   }, {
@@ -56,7 +75,8 @@ record_heatmap <- function(
         list()
       }
     } else {
-      session$userData$heatmap[[length(session$userData$heatmap) + 1]] <- list(
+      heatmap_len <- length(session$userData$heatmap) + 1
+      session$userData$heatmap[[heatmap_len]] <- list(
         x = input$heatmap_data$x,
         y = input$heatmap_data$y,
         value = input$heatmap_data$value

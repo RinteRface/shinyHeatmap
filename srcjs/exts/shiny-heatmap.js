@@ -25,7 +25,7 @@ $(document).ready(function(){
   });
   
   Shiny.addCustomMessageHandler('add_heatmap_data', function(m) {
-    heatmapConfig = m.options;
+    heatmapConfig = m.options || {};
     heatmapConfig.container = heatmapContainer;
     heatmap = h337.create(heatmapConfig);
     heatmap.setData({data: m.data});

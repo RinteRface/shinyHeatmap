@@ -22,7 +22,7 @@ download_heatmap(
 \item{clean}{Whether to clean the heatmap. This allows to click
 on the UI again and generate a new heatmap. Default to TRUE.}
 
-\item{options}{Slot for heatmap options.
+\item{options}{Slot for heatmap options. Expect a (nested) list.
 See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.}
 }
 \description{

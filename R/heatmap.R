@@ -102,7 +102,7 @@ record_heatmap <- function(
 #' @param session Shiny session object.
 #' @param clean Whether to clean the heatmap. This allows to click
 #' on the UI again and generate a new heatmap. Default to TRUE.
-#' @param options Slot for heatmap options. 
+#' @param options Slot for heatmap options. Expect a (nested) list.
 #' See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.
 #'
 #' @export

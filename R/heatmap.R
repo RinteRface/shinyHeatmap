@@ -38,6 +38,7 @@ heatmap_deps <- function() {
 #' @param target Container selector hosting the heatmap canvas.
 #' Default to Shiny fluidPage container. Be careful to change it if
 #' you use another template.
+#' @param type Event type: click or mouse move. Default to click.
 #' @param timeout Necessary if the page needs time to load. 
 #' Expressed in milliseconds.
 #' @param session Shiny session object. Useful to store heatmap data.
@@ -48,10 +49,12 @@ heatmap_deps <- function() {
 record_heatmap <- function(
     path = "www/heatmap-data.json",
     target = ".container-fluid", 
+    type = c("click", "move"),
     timeout = 10,
     session = shiny::getDefaultReactiveDomain()
 ) {
   input <- get("input", envir = parent.frame(n = 1))
+  type <- match.arg(type)
   
   # init heatmap container
   observeEvent(TRUE, {
@@ -59,7 +62,8 @@ record_heatmap <- function(
       "initialize_container", 
       list(
         target = target,
-        timeout = timeout
+        timeout = timeout,
+        type = type
       )
     )
   }, once = TRUE)

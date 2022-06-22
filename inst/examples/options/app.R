@@ -36,7 +36,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-  record_heatmap()
+  record_heatmap(type = "move")
   
   output$distPlot <- renderPlot({
     # generate bins based on input$bins from ui.R
@@ -60,7 +60,7 @@ server <- function(input, output, session) {
           ".95" = "white"
         )
       ),
-      clean = FALSE
+      clean = TRUE
     )
   })
 }

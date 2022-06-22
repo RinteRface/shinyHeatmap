@@ -7,6 +7,7 @@
 record_heatmap(
   path = "www/heatmap-data.json",
   target = ".container-fluid",
+  type = c("click", "move"),
   timeout = 10,
   session = shiny::getDefaultReactiveDomain()
 )
@@ -17,6 +18,8 @@ record_heatmap(
 \item{target}{Container selector hosting the heatmap canvas.
 Default to Shiny fluidPage container. Be careful to change it if
 you use another template.}
+
+\item{type}{Event type: click or mouse move. Default to click.}
 
 \item{timeout}{Necessary if the page needs time to load.
 Expressed in milliseconds.}

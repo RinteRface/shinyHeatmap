@@ -7,7 +7,13 @@ $(document).ready(function(){
   Shiny.addCustomMessageHandler('initialize_container', function(m) {
     setTimeout(function() {
       heatmapContainer = document.querySelector(m.target);
-      heatmapContainer.onclick = function(e) {
+      var eventName;
+      if (m.type === "click") {
+        eventName = "onclick";
+      } else if (m.type === "move") {
+        eventName = "onmousemove";
+      }
+      heatmapContainer[eventName] = function(e) {
         var tmp_data = {
           x: e.pageX,
           y: e.pageY,

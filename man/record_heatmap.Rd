@@ -5,7 +5,7 @@
 \title{Record heatmap data to a file}
 \usage{
 record_heatmap(
-  path = "www/heatmap-data.json",
+  path = "www",
   target = ".container-fluid",
   type = c("click", "move"),
   timeout = 10,

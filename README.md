@@ -45,20 +45,26 @@ devtools::install_github("RinteRface/shinyHeatmap")
 
 ### How to use it
 
-- The app must have a `www` folder since 
+The app must have a `www` folder since 
 heatmap data are stored in `www/heatmap-data.json` by default.
-- In `ui.R`, wrap the UI inside `heatmap_container()`. This initializes the canvas
+
+1. In `ui.R`, wrap the UI inside `heatmap_container()`. This initializes the canvas
 to record the click coordinates.
-- In `server.R`, call `record_heatmap()`. Overall, this recovers the
-coordinates of each click on the JS side and store them in `www/heatmap-data.json`.
-This may be used later to preview the heatmap. With vanilla `{shiny}` templates
-like `fluidPage`, you don't need to change anything. However, with more complex templates,
-you can pass the target CSS selector of the heatmap container 
-with `record_heatmap(target = ".wrapper")`. If the app takes time to load, 
-a __timeout__ parameters is available. This could be the case when you rely on packages
+
+2. In `server.R`, call `record_heatmap()`. Overall, this recovers the
+coordinates of each click on the JS side and store them in 
+`www/heatmap-<SHINY_SESSION_ID>-<USER_AGENT>-<DATE>.json`. 
+This may be used later to preview the heatmap by aggregating all compatible user sessions. 
+For instance, mobile platforms are not aggregated with destkop since coordinates would be
+incorrect. With vanilla `{shiny}` templates like `fluidPage`, 
+you don't need to change anything. However, with more complex 
+templates, you can pass the target CSS selector of the heatmap 
+container with `record_heatmap(target = ".wrapper")`. 
+If the app takes time to load, a __timeout__ parameters is available. 
+This could be the case when you rely on packages
 such as [{waiter}](https://github.com/JohnCoene/waiter).
-- Locally, you can add `download_heatmap()` to your app, which will read data stored
-in the JSON, generate the heatmap and save it as a png file:
+
+3. To download the heatmap locally, you must add `download_heatmap()` to your app, which will read data stored in the JSON files, generate the heatmap and save it as a png file:
 
 ```r
 # UI code
@@ -70,6 +76,7 @@ observeEvent(input$get_heatmap, {
 })
 ```
 
+Don't forget to remove `record_heatmap` if you don't want to generate extra logs!
 In general, you don't want to use `download_heatmap()` on a deployed app since
 end users might not be supposed to access and view usage data.
 
@@ -84,7 +91,6 @@ ui <- fluidPage(
   heatmap_container(
     # Application title
     titlePanel("Old Faithful Geyser Data"),
-    actionButton("get_heatmap", "Get heatmap"),
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
       sidebarPanel(
@@ -114,10 +120,6 @@ server <- function(input, output, session) {
     
     # draw the histogram with the specified number of bins
     hist(x, breaks = bins, col = 'darkgray', border = 'white')
-  })
-  
-  observeEvent(input$get_heatmap, {
-    download_heatmap()
   })
 }
 

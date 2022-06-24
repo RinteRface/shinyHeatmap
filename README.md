@@ -48,7 +48,7 @@ devtools::install_github("RinteRface/shinyHeatmap")
 The app must have a `www` folder since 
 heatmap data are stored in `www/heatmap-data.json` by default.
 
-1. In `ui.R`, wrap the UI inside `heatmap_container()`. This initializes the canvas
+1. In `ui.R`, wrap the UI inside `with_heatmap()`. This initializes the canvas
 to record the click coordinates.
 
 2. In `server.R`, call `record_heatmap()`. Overall, this recovers the
@@ -64,21 +64,7 @@ If the app takes time to load, a __timeout__ parameters is available.
 This could be the case when you rely on packages
 such as [{waiter}](https://github.com/JohnCoene/waiter).
 
-3. To download the heatmap locally, you must add `download_heatmap()` to your app, which will read data stored in the JSON files, generate the heatmap and save it as a png file:
-
-```r
-# UI code
-actionButton("get_heatmap", "Get heatmap")
-
-# Server code
-observeEvent(input$get_heatmap, {
-  download_heatmap()
-})
-```
-
-Don't forget to remove `record_heatmap` if you don't want to generate extra logs!
-In general, you don't want to use `download_heatmap()` on a deployed app since
-end users might not be supposed to access and view usage data.
+3. To download the heatmap locally, you must add `download_heatmap()` to your app, which will read data stored in the JSON files, generate the heatmap and save it as a png file. Don't forget to remove `record_heatmap` if you don't want to generate extra logs! In general, you don't want to use `download_heatmap()` on a deployed app since end users might not be supposed to access and view usage data.
 
 Full code below:
 

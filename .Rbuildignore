@@ -9,3 +9,4 @@
 ^webpack\.common\.js$
 ^\.github$
 ^LICENSE\.md$
+inst/examples/test

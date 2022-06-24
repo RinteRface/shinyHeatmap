@@ -113,6 +113,7 @@ record_heatmap <- function(
 download_heatmap_ui <- function() {
   wellPanel(
     class = "shiny-heatmap-ui",
+    style = "display: none;",
     h1("shinyHeatmap UI"),
     sliderInput(
       "heatmap_date", 
@@ -176,6 +177,24 @@ read_heatmap_records <- function(records, viewport_dims) {
   })
 }
 
+
+#' Take heatmap screenshot
+#'
+#' @param filename Where to save the screenshot.
+#' @param target Element to capture within the page. CSS
+#' selector ...
+#'
+#' @keywords internal
+#' @importFrom shinyscreenshot screenshot
+take_heatmap_screenshot <- function(filename, target) {
+  screenshot(
+    scale = 1, 
+    filename = filename, 
+    selector = target
+  )
+  Sys.sleep(1)
+}
+
 #' Show recorded heatmap
 #' 
 #' Show and download \link{record_heatmap} data.
@@ -187,12 +206,12 @@ read_heatmap_records <- function(records, viewport_dims) {
 #' you use another template.
 #' @param timeout Necessary if the page needs time to load. 
 #' Expressed in milliseconds.
+#' @param show_ui Whether to show the download UI. Default to TRUE.
 #' @param options Slot for heatmap options. Expect a (nested) list.
 #' See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.
 #' @param session Shiny session object.
 #'
 #' @export
-#' @importFrom shinyscreenshot screenshot
 #' @importFrom jsonlite read_json toJSON
 #' @importFrom shiny observeEvent updateSliderInput req renderPrint
 download_heatmap <- function(
@@ -200,6 +219,7 @@ download_heatmap <- function(
     filename = "heatmap.png", 
     target = ".container-fluid",
     timeout = 10,
+    show_ui = TRUE,
     options = NULL,
     session = shiny::getDefaultReactiveDomain()
 ) {
@@ -209,6 +229,11 @@ download_heatmap <- function(
   
   # Populate date select input based on recorded files
   observeEvent(TRUE, {
+    # Make UI visible
+    if (show_ui) {
+      session$sendCustomMessage("show_heatmap_ui", TRUE)
+    }
+    
     updateSliderInput(
       session,
       "heatmap_date",
@@ -272,11 +297,17 @@ download_heatmap <- function(
         options = options
       )
     )
+    
+    # Automatically download screenshot if UI not visible
+    if (!show_ui) {
+      take_heatmap_screenshot(filename, target)
+    }
   }, ignoreInit = TRUE)
   
-  # take screenshot
-  observeEvent(session$input$get_heatmap, {
-    screenshot(scale = 1, filename = filename, selector = target)
-    Sys.sleep(1)
-  })
+  # Take screenshot
+  if (show_ui) {
+    observeEvent(session$input$get_heatmap, {
+      take_heatmap_screenshot(filename, target)
+    })
+  }
 }

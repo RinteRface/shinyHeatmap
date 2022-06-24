@@ -63,4 +63,9 @@ $(document).ready(function(){
     // export heatmap to window (mostly for debug purpose)
     window.heatmap = heatmap;
   });
+  
+  // Show download UI
+  Shiny.addCustomMessageHandler("show_heatmap_ui", function(m) {
+    $('.shiny-heatmap-ui').show();
+  });
 });

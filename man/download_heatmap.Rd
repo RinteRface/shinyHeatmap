@@ -9,6 +9,7 @@ download_heatmap(
   filename = "heatmap.png",
   target = ".container-fluid",
   timeout = 10,
+  show_ui = TRUE,
   options = NULL,
   session = shiny::getDefaultReactiveDomain()
 )
@@ -24,6 +25,8 @@ you use another template.}
 
 \item{timeout}{Necessary if the page needs time to load.
 Expressed in milliseconds.}
+
+\item{show_ui}{Whether to show the download UI. Default to TRUE.}
 
 \item{options}{Slot for heatmap options. Expect a (nested) list.
 See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.}

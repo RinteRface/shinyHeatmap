@@ -66,6 +66,7 @@ server <- function(input, output, session) {
     hist(x, breaks = bins, col = 'darkgray', border = 'white')
   })
   
+  #download_heatmap(target = ".heatmap-container", show_ui = FALSE)
   download_heatmap(target = ".heatmap-container")
 }
 

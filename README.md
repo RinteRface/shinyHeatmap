@@ -53,7 +53,7 @@ to record the click coordinates.
 
 2. In `server.R`, call `record_heatmap()`. Overall, this recovers the
 coordinates of each click on the JS side and store them in 
-`www/heatmap-<SHINY_SESSION_ID>-<USER_AGENT>-<DATE>.json`. 
+`www/heatmap-<USER_AGENT>-<DATE>.json`. 
 This may be used later to preview the heatmap by aggregating all compatible user sessions. 
 For instance, mobile platforms are not aggregated with destkop since coordinates would be
 incorrect. With vanilla `{shiny}` templates like `fluidPage`, 
@@ -64,9 +64,16 @@ If the app takes time to load, a __timeout__ parameters is available.
 This could be the case when you rely on packages
 such as [{waiter}](https://github.com/JohnCoene/waiter).
 
-3. To download the heatmap locally, you must add `download_heatmap()` to your app, which will read data stored in the JSON files, generate the heatmap and save it as a png file. Don't forget to remove `record_heatmap` if you don't want to generate extra logs! In general, you don't want to use `download_heatmap()` on a deployed app since end users might not be supposed to access and view usage data.
+3. To download the heatmap locally, you must add `download_heatmap()` to your app, which will read data stored in the JSON files, generate the heatmap and save it as a png file. By default, `download_heatmap()`
+will show a tiny UI below your app. It allows to see a timeline of the app usage as shown below.
+To disable the UI, you can call `download_heatmap(show_ui = FALSE)`, which will show
+all the aggregated data as well as take a screenshot of the heatmap area.
 
-Full code below:
+<img src="man/figures/shinyHeatmap-ui.gif">
+
+Don't forget to remove `record_heatmap()` if you don't want to generate extra logs! In general, you don't want to use `download_heatmap()` on a deployed app since end users might not be supposed to access and view usage data.
+
+Below shows an example to record the heatmap:
 
 ```r
 library(shiny)
@@ -74,7 +81,7 @@ library(shinyHeatmap)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-  heatmap_container(
+  with_heatmap(
     # Application title
     titlePanel("Old Faithful Geyser Data"),
     # Sidebar with a slider input for number of bins 

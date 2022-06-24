@@ -112,6 +112,7 @@ record_heatmap <- function(
 #' @importFrom shiny tagList actionButton sliderInput verbatimTextOutput animationOptions h1
 download_heatmap_ui <- function() {
   wellPanel(
+    class = "shiny-heatmap-ui",
     h1("shinyHeatmap UI"),
     sliderInput(
       "heatmap_date", 
@@ -121,7 +122,7 @@ download_heatmap_ui <- function() {
       value = 1, 
       step = 1,
       animate = animationOptions(
-        interval = 2000,
+        interval = 3000,
         loop = FALSE,
         playButton = NULL,
         pauseButton = NULL

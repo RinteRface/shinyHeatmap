@@ -7,9 +7,10 @@
 #' @importFrom shiny tagList div
 #' 
 #' @export
-heatmap_container <- function(...){
+with_heatmap <- function(...){
   tagList(
     ...,
+    download_heatmap_ui(),
     heatmap_deps()
   )
 }
@@ -92,10 +93,9 @@ record_heatmap <- function(
     file_path <- file.path(
       path, 
       sprintf(
-        "heatmap-%s-%s-%s.json", 
-        session$options$appToken, 
+        "heatmap-%s-timestamp_%s.json", 
         platform,
-        Sys.Date()
+        format(Sys.time(), format = "%F_%R_%Z")
       )
     )
     con <- file(file_path, open = "w")
@@ -106,13 +106,81 @@ record_heatmap <- function(
 }
 
 
+#' Download heatmap UI
+#'
+#' @export
+#' @importFrom shiny tagList actionButton sliderInput verbatimTextOutput animationOptions h1
+download_heatmap_ui <- function() {
+  wellPanel(
+    h1("shinyHeatmap UI"),
+    sliderInput(
+      "heatmap_date", 
+      label = "Select dates to aggregate", 
+      min = 0, 
+      max = 1, 
+      value = 1, 
+      step = 1,
+      animate = animationOptions(
+        interval = 2000,
+        loop = FALSE,
+        playButton = NULL,
+        pauseButton = NULL
+      ),
+      ticks = FALSE
+    ),
+    verbatimTextOutput("txt_date"),
+    actionButton("get_heatmap", "Get heatmap")
+  )
+}
+
+#' Get heatmap file records
+#'
+#' List all heatmap recordings
+#'
+#' @param path Recordings location
+#'
+#' @return A vector containing full path to recordings.
+#' @export
+get_heatmap_records <- function(path) {
+  tmp_files <- list.files(
+    path, 
+    pattern = "heatmap.*\\.json", 
+    full.names = TRUE
+  )
+  if (length(tmp_files) < 2) {
+    stop("You should have at least 2 recordings.")
+  }
+  tmp_files
+}
+
+#' Read and aggregate heatmap records
+#' 
+#' Scale coordinates to make sure they render the same on all screens.
+#'
+#' @param records Returned by \link{get_heatmap_records}.
+#' @param viewport_dims Obtained from JS and stored in session$input$viewport_dims.
+#'
+#' @return A list with aggregated data.
+#' @export
+read_heatmap_records <- function(records, viewport_dims) {
+  tmp_data <- unlist(
+    lapply(records, read_json), 
+    recursive = FALSE
+  )
+  
+  lapply(tmp_data, function(d) {
+    d$x <- round(d$x * viewport_dims$width)
+    d$y <- round(d$y * viewport_dims$height)
+    d
+  })
+}
+
 #' Show recorded heatmap
 #' 
 #' Show and download \link{record_heatmap} data.
 #' 
 #' @param path Previously saved heatmap data for persistence.
 #' @param filename Screenshot file name.
-#' @param session Shiny session object.
 #' @param target Container selector hosting the heatmap canvas.
 #' Default to Shiny fluidPage container. Be careful to change it if
 #' you use another template.
@@ -120,59 +188,94 @@ record_heatmap <- function(
 #' Expressed in milliseconds.
 #' @param options Slot for heatmap options. Expect a (nested) list.
 #' See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.
+#' @param session Shiny session object.
 #'
 #' @export
 #' @importFrom shinyscreenshot screenshot
 #' @importFrom jsonlite read_json toJSON
+#' @importFrom shiny observeEvent updateSliderInput req renderPrint
 download_heatmap <- function(
     path = "www",
     filename = "heatmap.png", 
     target = ".container-fluid",
     timeout = 10,
-    session = shiny::getDefaultReactiveDomain(),
-    options = NULL
+    options = NULL,
+    session = shiny::getDefaultReactiveDomain()
 ) {
   
-  # Process data with current screensize
-  viewport_dims <- session$input$viewport_dims
+  output <- get("output", envir = parent.frame(n = 1))
+  heatmap_files <- get_heatmap_records(path)
   
-  heatmap_files <- list.files(path, pattern = "heatmap.*\\.json", full.names = TRUE)
-  tmp_data <- unlist(
-    lapply(heatmap_files, read_json), 
-    recursive = FALSE
-  )
-  processed_data <- lapply(tmp_data, function(data) {
-    data$x <- round(data$x * viewport_dims$width)
-    data$y <- round(data$y * viewport_dims$height)
-    data
+  # Populate date select input based on recorded files
+  observeEvent(TRUE, {
+    updateSliderInput(
+      session,
+      "heatmap_date",
+      min = 1,
+      max = length(heatmap_files),
+      value = length(heatmap_files)
+    )
+  }, once = TRUE)
+  
+  # Just show the date of the selected recording
+  output$txt_date <- renderPrint({
+    # Bug in Shiny sliderInput with timezone
+    # always returns UTC no matter the provided time...
+    # We have to reconvert
+    req(session$input)
+    selected_date <- as.POSIXct(
+      gsub(
+        "_", 
+        " ",
+        strsplit(
+          strsplit(
+            heatmap_files[[session$input$heatmap_date]], 
+            "timestamp_"
+          )[[1]][2],
+          ".json"
+        )[[1]][1]
+      )
+    )
+    sprintf("Latest date: %s", selected_date)
   })
   
-  # Init heatmap container without tracking
-  session$sendCustomMessage(
-    "initialize_container", 
-    list(
-      target = target,
-      timeout = timeout,
-      track = FALSE
+  # Process data, init canvas, show heatmap
+  observeEvent(session$input$heatmap_date, {
+    # Read and process data with current screensize
+    processed_data <- read_heatmap_records(
+      heatmap_files[1:session$input$heatmap_date],
+      session$input$viewport_dims
     )
-  )
-  
-  Sys.sleep(timeout/1000 + 1)
-  
-  # Add data to heatmap
-  session$sendCustomMessage(
-    "add_heatmap_data", 
-    list(
-      data = toJSON(
-        processed_data, 
-        auto_unbox = TRUE, 
-        pretty = TRUE
-      ),
-      options = options
+    
+    # Init heatmap container without tracking
+    session$sendCustomMessage(
+      "initialize_container", 
+      list(
+        target = target,
+        timeout = timeout,
+        track = FALSE
+      )
     )
-  )
+    
+    Sys.sleep(timeout/1000 + 1)
+    
+    # Add data to heatmap
+    session$sendCustomMessage(
+      "add_heatmap_data", 
+      list(
+        data = toJSON(
+          processed_data, 
+          auto_unbox = TRUE, 
+          pretty = TRUE
+        ),
+        options = options
+      )
+    )
+  }, ignoreInit = TRUE)
   
   # take screenshot
-  screenshot(scale = 1, filename = filename)
-  Sys.sleep(1)
+  observeEvent(session$input$get_heatmap, {
+    screenshot(scale = 1, filename = filename, selector = target)
+    Sys.sleep(1)
+  })
 }

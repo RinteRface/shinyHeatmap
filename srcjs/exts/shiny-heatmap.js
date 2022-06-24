@@ -52,9 +52,13 @@ $(document).ready(function(){
   });
   
   Shiny.addCustomMessageHandler('add_heatmap_data', function(m) {
-    heatmapConfig = m.options || {};
-    heatmapConfig.container = heatmapContainer;
-    heatmap = h337.create(heatmapConfig);
+    // don't recreate new container if it exists
+    if (window.heatmap === undefined) {
+      heatmapConfig = m.options || {};
+      heatmapConfig.container = heatmapContainer;
+      heatmap = h337.create(heatmapConfig);
+    }
+    
     heatmap.setData({ data: m.data });
     // export heatmap to window (mostly for debug purpose)
     window.heatmap = heatmap;

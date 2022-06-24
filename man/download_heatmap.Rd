@@ -9,8 +9,8 @@ download_heatmap(
   filename = "heatmap.png",
   target = ".container-fluid",
   timeout = 10,
-  session = shiny::getDefaultReactiveDomain(),
-  options = NULL
+  options = NULL,
+  session = shiny::getDefaultReactiveDomain()
 )
 }
 \arguments{
@@ -25,10 +25,10 @@ you use another template.}
 \item{timeout}{Necessary if the page needs time to load.
 Expressed in milliseconds.}
 
-\item{session}{Shiny session object.}
-
 \item{options}{Slot for heatmap options. Expect a (nested) list.
 See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.}
+
+\item{session}{Shiny session object.}
 }
 \description{
 Show and download \link{record_heatmap} data.

@@ -18,6 +18,10 @@ You should give it a try.
 
 If you're concerned about data privacy, `{shinyHeatmap}` only records x and y clicks coordinates on the window.
 
+<video controls="controls" width="800" height="600" name="shinyHeatmap date review." autoplay muted loop>
+  <source src="man/figures/shinyHeatmap-ui.mp4">
+</video>
+
 ## Examples
 
 ### {shiny}
@@ -67,11 +71,7 @@ such as [{waiter}](https://github.com/JohnCoene/waiter).
 3. To download the heatmap locally, you must add `download_heatmap()` to your app, which will read data stored in the JSON files, generate the heatmap and save it as a png file. By default, `download_heatmap()`
 will show a tiny UI below your app. It allows to see a timeline of the app usage as shown below.
 To disable the UI, you can call `download_heatmap(show_ui = FALSE)`, which will show
-all the aggregated data as well as take a screenshot of the heatmap area.
-
-<img src="man/figures/shinyHeatmap-ui.gif">
-
-Don't forget to remove `record_heatmap()` if you don't want to generate extra logs! In general, you don't want to use `download_heatmap()` on a deployed app since end users might not be supposed to access and view usage data.
+all the aggregated data as well as take a screenshot of the heatmap area. Don't forget to remove `record_heatmap()` if you don't want to generate extra logs! In general, you don't want to use `download_heatmap()` on a deployed app since end users might not be supposed to access and view usage data.
 
 Below shows an example to record the heatmap:
 

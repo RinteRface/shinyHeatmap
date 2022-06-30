@@ -4,3 +4,4 @@ node_modules
 .Rdata
 .httr-oauth
 .DS_Store
+docs

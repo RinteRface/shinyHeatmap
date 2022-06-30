@@ -17,5 +17,6 @@ Imports:
     pushbar,
     shiny,
     shinyscreenshot
-URL: https://github.com/RinteRface/shinyHeatmap
+URL: https://github.com/RinteRface/shinyHeatmap,
+    https://rinterface.github.io/shinyHeatmap/
 BugReports: https://github.com/RinteRface/shinyHeatmap/issues

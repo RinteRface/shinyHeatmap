@@ -16,3 +16,6 @@ inst/examples/options/www
 inst/examples/shinydashboard/www
 inst/examples/shiny-fluent/www
 inst/examples/test/www
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

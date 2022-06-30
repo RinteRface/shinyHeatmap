@@ -8,15 +8,21 @@
 
 The goal of `{shinyHeatmap}` is to provide a __free__ and __local__ alternative to more advanced user tracking platform such as [Hotjar](https://www.google.com/search?q=hotjar&oq=hotjar&aqs=chrome.0.69i59j0i512j69i60l6.1063j0j7&sourceid=chrome&ie=UTF-8).
 
-`{shinyHeatmap}` generates beautiful and persistent visual heatmaps, representing the app usage across many user sessions. If you ever wondered:
+`{shinyHeatmap}` generates beautiful and persistent visual heatmaps, representing the app usage across many user sessions. 
+
+<figure>
+  <img src="man/figures/shinyHeatmap-demo.png">
+  <figcaption>Commute explorer Shiny <a href="https://community.rstudio.com/t/commute-explorer-shiny-contest-submission/104651">app</a> (2021 Shiny Contest winner).</figcaption>
+</figure>
+
+<br>
+If you ever wondered:
 
 - Is the left action button used?
 - Did people notice the new tab?
 - Is the top left checkbox still useful?
 
-You should give it a try.
-
-If you're concerned about data privacy, `{shinyHeatmap}` only records x and y clicks coordinates on the window.
+You should give it a try! If you're concerned about data privacy, `{shinyHeatmap}` only records x and y clicks coordinates on the window.
 
 <video controls="controls" width="800" height="600" name="shinyHeatmap date review." autoplay muted loop>
   <source src="man/figures/shinyHeatmap-ui.mp4">
@@ -80,8 +86,8 @@ library(shiny)
 library(shinyHeatmap)
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
-  with_heatmap(
+ui <- with_heatmapfluidPage(
+  fluidPage(
     # Application title
     titlePanel("Old Faithful Geyser Data"),
     # Sidebar with a slider input for number of bins 

@@ -14,6 +14,7 @@ RoxygenNote: 7.1.2
 Imports: 
     htmltools,
     jsonlite,
+    pushbar,
     shiny,
     shinyscreenshot
 URL: https://github.com/RinteRface/shinyHeatmap

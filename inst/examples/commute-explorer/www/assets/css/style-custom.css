@@ -1,0 +1,327 @@
+/** Material design cards ****************************************************/
+
+.card {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16), 0 2px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.card {
+  /*margin-top: 10px;*/
+  box-sizing: border-box;
+  /*border-radius: 2px;*/
+  background-clip: padding-box;
+  height: 100%;
+}
+.card .card-content {
+  padding: 16px;
+  /*border-radius: 4px;*/
+  background-clip: padding-box;
+  box-sizing: border-box;
+  height: 100%;
+}
+.card .card-content p {
+  margin: 0;
+  color: inherit;
+}
+
+.tile-headline {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: -7px;
+  margin-left: 5px;
+}
+
+.tile-subheadline {
+  text-transform: uppercase;
+  font-size: 10px;
+  color: gray;
+  margin: -9px 0 10px 5px;
+}
+
+
+
+/** Appearance of form labels ************************************************/
+
+.control-label {
+    display: none;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 400;
+    color: gray;
+    font-size: 0.9em;
+}
+
+.pretty {
+    position: relative;
+    display: inline-block;
+    margin-right: 5px;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.pretty .state label {
+    position: initial;
+    display: inline-block;
+    margin: 0;
+    text-indent: 1.5em;
+    min-width: calc(1em + 2px);
+    font-family: "Roboto Condensed";
+}
+
+.btn {
+  /* border-radius: 0; */
+  font-family: "Roboto Condensed", sans-serif;
+  text-transform: uppercase;
+  /* letter-spacing: 2px; */
+  font-size: 11px;
+  /* padding: 8px 37px; */
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  background-color: #242424;
+  color: #f6f6f6;
+  border: 1px solid transparent;
+  padding: 6px;
+  /* font-size: 14px; */
+  line-height: 1.42857143;
+  border-radius: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+/* Boostrap adjustments ******************************************************/
+
+.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 6px;
+    padding-left: 6px;
+    margin-top: 5px;
+}
+
+
+/** Mapbox tooltip adjustment ************************************************/
+
+/*
+.mapboxgl-popup-tip {
+  border: 5px solid transparent;
+  border-top-color: #fff;
+  border-bottom: none;
+}
+*/
+
+.mapboxgl-popup-content {
+  border-radius: 0 !important;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5) !important;
+  /*background-color: #191a1ac7 !important;*/
+  background-color: #191a1a !important;
+}
+
+
+
+.mapboxgl-popup {
+  transform:none !important;
+  /*top: 41px !important;*/
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-center .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-left .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-right .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip, 
+.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip {
+  display:none !important;
+}
+
+.map-headline {
+  text-transform: uppercase; 
+  font-weight: bold; 
+  font-size: 14px; 
+  color: #fd9f02;
+}
+
+*:focus {
+  outline: none;
+}
+
+
+/** Selectize adjustments ******************************************************/
+
+.selectize-input, .selectize-control.single .selectize-input.input-active {
+    background: #242424;
+    cursor: text;
+    display: inline-block;
+}
+
+.selectize-input {
+    border: none;
+    padding: 6px 12px;
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.selectize-dropdown, .selectize-input, .selectize-input input {
+    color: #fd9f02;
+    font-family: "Roboto Condensed", sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 20px;
+    -webkit-font-smoothing: inherit;
+}
+
+.selectize-input.full {
+    background-color: #242424;
+}
+
+.selectize-dropdown, .selectize-dropdown.form-control {
+    height: auto;
+    color: black;
+    font-weight: normal;
+    padding: 0;
+    margin: 2px 0 0 0;
+    z-index: 1000;
+    background: #f2f2f2;
+    /* border: 1px solid #cccccc; */
+    /* border: 1px solid rgba(0, 0, 0, 0.15); */
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+
+.selectize-dropdown .active {
+    background-color: #337ab7;
+    color: #f2f2f2;
+}
+
+.action-button {
+  color: #f2f2f2;
+  border-radius: 4px;
+  background-color: #313131;
+  padding: 5px 7px 5px 7px;
+  margin-right: 5px;
+}
+
+
+/** Chart styles **************************************************************/
+
+.chart-container-home, .chart-container-car, .chart-container-public, .chart-container-walk, .chart-container-bike {
+  position: relative;
+  height: calc((100% - 50px) * 0.2 );
+}
+
+.chart-container-home:before {
+position: absolute;
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.1);
+  top: 20px;
+  right: 10px;
+  content: "\f015";
+}
+
+.chart-container-car:before {
+position: absolute;
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.1);
+  top: 20px;
+  right: 10px;
+  content: "\f1b9";
+}
+
+.chart-container-public:before {
+position: absolute;
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.1);
+  top: 20px;
+  right: 10px;
+  content: "\f238";
+}
+
+.chart-container-walk:before {
+position: absolute;
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.1);
+  top: 20px;
+  right: 10px;
+  content: "\f554";
+}
+
+.chart-container-bike:before {
+position: absolute;
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.1);
+  top: 20px;
+  right: 10px;
+  content: "\f206";
+}
+
+.chart-title {
+  position: absolute; 
+  top: 0; 
+  right: 0;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.chart-title strong {
+  font-size: 18px;
+  color: #fd9f02;
+}
+
+.chart-title em {
+  padding: 0 2px 0 0;
+  color: #fd9f02;
+}
+
+
+/** Table styles **************************************************************/
+
+.area-link {
+  cursor: pointer; 
+  /*text-decoration: underline; 
+  text-decoration-style: dotted;*/
+  font-size: 12px;
+}
+
+.area-link:before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: "\f35d  ";
+  font-size: 10px;
+}

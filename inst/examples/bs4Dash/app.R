@@ -3,7 +3,7 @@ library(bs4Dash)
 library(shinyHeatmap)
 
 shinyApp(
-  ui = heatmap_container(
+  ui = with_heatmap(
     dashboardPage(
       header = dashboardHeader(
         title = dashboardBrand(
@@ -11,8 +11,7 @@ shinyApp(
           color = "primary",
           href = "https://adminlte.io/themes/v3",
           image = "https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png"
-        ),
-        actionButton("get_heatmap", "Get heatmap")
+        )
       ),
       sidebar = dashboardSidebar(),
       body = dashboardBody(
@@ -74,11 +73,8 @@ shinyApp(
     )
   ),
   server = function(input, output) {
-    record_heatmap(target = "body", timeout = 3000)
-    
-    observeEvent(input$get_heatmap, {
-      download_heatmap()
-    })
+    #record_heatmap(target = ".wrapper", timeout = 3000)
+    download_heatmap(target = ".wrapper")
     
     observeEvent(input$update_box, {
       updateBox(

@@ -47,7 +47,6 @@ header <- dashboardHeader(
 )
 
 body <- dashboardBody(
-  actionButton("get_heatmap", "Get heatmap"),
   fluidRow(
     column(width = 9,
            box(width = NULL, solidHeader = TRUE,
@@ -100,7 +99,7 @@ body <- dashboardBody(
   )
 )
 
-ui <- heatmap_container(
+ui <- with_heatmap(
   dashboardPage(
     header,
     dashboardSidebar(disable = TRUE),
@@ -110,11 +109,8 @@ ui <- heatmap_container(
 
 server <- function(input, output, session) {
   
-  record_heatmap(target = ".wrapper")
-  
-  observeEvent(input$get_heatmap, {
-    download_heatmap()
-  })
+  #record_heatmap(target = ".wrapper")
+  download_heatmap(target = ".wrapper")
   
   # Route select input box
   output$routeSelect <- renderUI({

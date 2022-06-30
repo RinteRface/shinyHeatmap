@@ -11,11 +11,10 @@ library(shiny)
 library(shinyHeatmap)
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
-  heatmap_container(
+ui <- with_heatmap(
+  fluidPage(
     # Application title
     titlePanel("Old Faithful Geyser Data"),
-    actionButton("get_heatmap", "Get heatmap"),
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
       sidebarPanel(
@@ -36,7 +35,8 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-  record_heatmap()
+  #record_heatmap()
+  download_heatmap()
   
   output$distPlot <- renderPlot({
     # generate bins based on input$bins from ui.R

@@ -5,12 +5,14 @@
 #' @param ... Shiny UI code.
 #' 
 #' @importFrom shiny tagList div
+#' @importFrom pushbar pushbar_deps
 #' 
 #' @export
 with_heatmap <- function(...){
   tagList(
     ...,
     download_heatmap_ui(),
+    pushbar_deps(),
     heatmap_deps()
   )
 }
@@ -110,10 +112,11 @@ record_heatmap <- function(
 #'
 #' @export
 #' @importFrom shiny tagList actionButton sliderInput verbatimTextOutput animationOptions h1
+#' @importFrom pushbar pushbar
 download_heatmap_ui <- function() {
-  wellPanel(
-    class = "shiny-heatmap-ui",
-    style = "display: none;",
+  pushbar(
+    from = "bottom",
+    id = "shiny-heatmap-ui",
     h1("shinyHeatmap UI"),
     sliderInput(
       "heatmap_date", 
@@ -123,7 +126,7 @@ download_heatmap_ui <- function() {
       value = 1, 
       step = 1,
       animate = animationOptions(
-        interval = 3000,
+        interval = 1000,
         loop = FALSE,
         playButton = NULL,
         pauseButton = NULL
@@ -214,6 +217,7 @@ take_heatmap_screenshot <- function(filename, target) {
 #' @export
 #' @importFrom jsonlite read_json toJSON
 #' @importFrom shiny observeEvent updateSliderInput req renderPrint
+#' @importFrom pushbar setup_pushbar pushbar_open
 download_heatmap <- function(
     path = "www",
     filename = "heatmap.png", 
@@ -227,13 +231,16 @@ download_heatmap <- function(
   output <- get("output", envir = parent.frame(n = 1))
   heatmap_files <- get_heatmap_records(path)
   
+  setup_pushbar()
+  
+  observeEvent(session$input$heatmapUITrigger, {
+    if (show_ui) {
+      pushbar_open(id = "shiny-heatmap-ui")
+    }
+  })
+  
   # Populate date select input based on recorded files
   observeEvent(TRUE, {
-    # Make UI visible
-    if (show_ui) {
-      session$sendCustomMessage("show_heatmap_ui", TRUE)
-    }
-    
     updateSliderInput(
       session,
       "heatmap_date",

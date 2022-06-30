@@ -53,10 +53,9 @@ details_list_columns <- tibble(
   key = fieldName)
 
 # ---- 05_ui
-ui <- heatmap_container(
+ui <- with_heatmap(
   fluentPage(
     tags$style(".card { padding: 28px; margin-bottom: 28px; }"),
-    actionButton("get_heatmap", "Get heatmap"),
     Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
       makeCard("Filters", filters, size = 4, style = "max-height: 320px"),
@@ -69,11 +68,8 @@ ui <- heatmap_container(
 
 server <- function(input, output, session) {
   
-  record_heatmap(target = "body")
-  
-  observeEvent(input$get_heatmap, {
-    download_heatmap()
-  })
+  #record_heatmap(target = "body")
+  download_heatmap(target = "body")
   
   filtered_deals <- reactive({
     req(input$fromDate)

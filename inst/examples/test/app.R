@@ -2,52 +2,49 @@ library(shiny)
 library(shinyHeatmap)
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
-  with_heatmap(
-    div(
-      class = "heatmap-container",
-      # Application title
-      #tags$head(
-      #  tags$script(
-      #    HTML("var myX, myY, xyOn, myMouseX, myMouseY;
-      #    xyOn = true;
-      #    function getXYPosition(e){
-      #      myMouseX=(e||event).clientX;
-      #      myMouseY=(e||event).clientY;
-      #      if (document.documentElement.scrollTop > 0) {
-      #        myMouseY = myMouseY + document.documentElement.scrollTop;
-      #      }
-      #      if (xyOn) {
-      #        alert('X is ' + myMouseX + ' Y is ' + myMouseY);
-      #      }
-      #    }
-      #    function toggleXY() {
-      #      xyOn = !xyOn;
-      #      document.getElementById('xyLink').blur();
-      #      return false;
-      #    }
-      #    
-      #    $(function(){
-      #      document.onmouseup=getXYPosition;
-      #    });
-      #    ")
-      #  )
-      #),
-      titlePanel("Old Faithful Geyser Data"),
-      # Sidebar with a slider input for number of bins 
-      sidebarLayout(
-        sidebarPanel(
-          sliderInput(
-            "bins",
-            "Number of bins:",
-            min = 1,
-            max = 50,
-            value = 30
-          )
-        ),
-        # Show a plot of the generated distribution
-        mainPanel(plotOutput("distPlot"))
-      )
+ui <- with_heatmap(
+  fluidPage(
+    # Application title
+    #tags$head(
+    #  tags$script(
+    #    HTML("var myX, myY, xyOn, myMouseX, myMouseY;
+    #    xyOn = true;
+    #    function getXYPosition(e){
+    #      myMouseX=(e||event).clientX;
+    #      myMouseY=(e||event).clientY;
+    #      if (document.documentElement.scrollTop > 0) {
+    #        myMouseY = myMouseY + document.documentElement.scrollTop;
+    #      }
+    #      if (xyOn) {
+    #        alert('X is ' + myMouseX + ' Y is ' + myMouseY);
+    #      }
+    #    }
+    #    function toggleXY() {
+    #      xyOn = !xyOn;
+    #      document.getElementById('xyLink').blur();
+    #      return false;
+    #    }
+    #    
+    #    $(function(){
+    #      document.onmouseup=getXYPosition;
+    #    });
+    #    ")
+    #  )
+    #),
+    titlePanel("Old Faithful Geyser Data"),
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+      sidebarPanel(
+        sliderInput(
+          "bins",
+          "Number of bins:",
+          min = 1,
+          max = 50,
+          value = 30
+        )
+      ),
+      # Show a plot of the generated distribution
+      mainPanel(plotOutput("distPlot"))
     )
   )
 )
@@ -66,8 +63,8 @@ server <- function(input, output, session) {
     hist(x, breaks = bins, col = 'darkgray', border = 'white')
   })
   
-  #download_heatmap(target = ".heatmap-container", show_ui = FALSE)
-  download_heatmap(target = ".heatmap-container")
+  #download_heatmap(show_ui = FALSE)
+  download_heatmap()
 }
 
 # Run the application 

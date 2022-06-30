@@ -2,7 +2,7 @@ pandoc: 2.7.3
 pkgdown: 2.0.5
 pkgdown_sha: ~
 articles: {}
-last_built: 2022-06-30T09:58Z
+last_built: 2022-06-30T13:15Z
 urls:
   reference: https://rinterface.github.io/shinyHeatmap/reference
   article: https://rinterface.github.io/shinyHeatmap/articles

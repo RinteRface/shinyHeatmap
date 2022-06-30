@@ -86,7 +86,7 @@ library(shiny)
 library(shinyHeatmap)
 
 # Define UI for application that draws a histogram
-ui <- with_heatmapfluidPage(
+ui <- with_heatmap(
   fluidPage(
     # Application title
     titlePanel("Old Faithful Geyser Data"),

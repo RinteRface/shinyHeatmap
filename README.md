@@ -25,7 +25,7 @@ If you ever wondered:
 You should give it a try! If you're concerned about data privacy, `{shinyHeatmap}` only records x and y clicks coordinates on the window.
 
 <video controls="controls" width="800" height="600" name="shinyHeatmap date review." autoplay muted loop>
-  <source src="man/figures/shinyHeatmap-ui.mp4">
+  <source src="inst/videos/shinyHeatmap-ui.mp4">
 </video>
 
 ## Examples

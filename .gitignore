@@ -5,3 +5,4 @@ node_modules
 .httr-oauth
 .DS_Store
 docs
+inst/doc

@@ -20,3 +20,7 @@ Imports:
 URL: https://github.com/RinteRface/shinyHeatmap,
     https://rinterface.github.io/shinyHeatmap/
 BugReports: https://github.com/RinteRface/shinyHeatmap/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

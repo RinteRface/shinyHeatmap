@@ -177,6 +177,27 @@
 <span><span class="co"># Run the application </span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level3">
+<h3 id="options">Options<a class="anchor" aria-label="anchor" href="#options"></a>
+</h3>
+<p><a href="https://github.com/RinteRface/shinyHeatmap" class="external-link">shinyHeatmap</a> allows to tweak the heatmap style with few lines of code. This may be achieved with the <strong>options</strong> parameter that expects a list of properties available in the heatmap.js <a href="https://www.patrick-wied.at/static/heatmapjs/docs.html" class="external-link">documentation</a>. For instance, below we change the points radius and color:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/download_heatmap.html">download_heatmap</a></span><span class="op">(</span></span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    radius <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    maxOpacity <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>    minOpacity <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    blur <span class="op">=</span> <span class="fl">.75</span>,</span>
+<span>    gradient <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      <span class="st">".5"</span> <span class="op">=</span> <span class="st">"blue"</span>,</span>
+<span>      <span class="st">".8"</span> <span class="op">=</span> <span class="st">"red"</span>,</span>
+<span>      <span class="st">".95"</span> <span class="op">=</span> <span class="st">"white"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>This is ideal if your app contains custom design like in the following example.</p>
+<p><img src="reference/figures/shinyHeatmap-theming-1.png"></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="acknowledgement">Acknowledgement<a class="anchor" aria-label="anchor" href="#acknowledgement"></a>

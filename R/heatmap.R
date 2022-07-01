@@ -58,6 +58,8 @@ record_heatmap <- function(
 ) {
   type <- match.arg(type)
   
+  if (!dir.exists(path)) dir.create(path)
+  
   # init heatmap container with tracking enabled
   observeEvent(TRUE, {
     session$sendCustomMessage(

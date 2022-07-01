@@ -132,6 +132,33 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
+### Options
+
+`{shinyHeatmap}` allows to tweak the heatmap style with few lines of code. This may
+be achieved with the __options__ parameter that expects a list of properties available 
+in the heatmap.js [documentation](https://www.patrick-wied.at/static/heatmapjs/docs.html). 
+For instance, below we change the points radius and color:
+
+```r
+download_heatmap(
+  options = list(
+    radius = 10,
+    maxOpacity = .5,
+    minOpacity = 0,
+    blur = .75,
+    gradient =  list(
+      ".5" = "blue",
+      ".8" = "red",
+      ".95" = "white"
+    )
+  )
+)
+```
+
+This is ideal if your app contains custom design like in the following example.
+
+<img src="man/figures/shinyHeatmap-theming-1.png">
+
 ## Acknowledgement
 
 `{shinyHeatmap}` is proudly powered by the excellent and free [heatmap.js](https://github.com/pa7/heatmap.js) library. Thanks [@pa7](https://github.com/pa7) for making this possible.

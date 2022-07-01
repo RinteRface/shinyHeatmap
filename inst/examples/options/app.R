@@ -10,9 +10,16 @@
 library(shiny)
 library(shinyHeatmap)
 
+thematic::thematic_shiny()
+
 # Define UI for application that draws a histogram
 ui <- with_heatmap(
   fluidPage(
+    theme = bslib::bs_theme(
+      version = 5,
+      fg = "#FFF",
+      bg = "#000"
+    ),
     # Application title
     titlePanel("Old Faithful Geyser Data"),
     # Sidebar with a slider input for number of bins 

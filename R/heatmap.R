@@ -176,9 +176,12 @@ read_heatmap_records <- function(records, viewport_dims) {
   )
   
   lapply(tmp_data, function(d) {
-    d$x <- round(d$x * viewport_dims$width)
-    d$y <- round(d$y * viewport_dims$height)
-    d
+    # Some case where x and y are empty lists...
+    if (length(d$x) > 0 && length(d$y) > 0) {
+      d$x <- round(d$x * viewport_dims$width)
+      d$y <- round(d$y * viewport_dims$height)
+      d 
+    }
   })
 }
 

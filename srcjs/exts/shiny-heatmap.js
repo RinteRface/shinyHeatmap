@@ -13,7 +13,7 @@ function exportViewportDims() {
 
 $(document).ready(function(){
   var heatmaps = [];
-  var heatmapContainer, heatmapConfig;
+  var heatmap, heatmapContainer, heatmapConfig;
   
   // Recover viewport dims to display correct coordinates
   $(document).on('shiny:connected', function() {
@@ -57,7 +57,7 @@ $(document).ready(function(){
     if (heatmaps[m.id] === undefined) {
       heatmapConfig = m.options || {};
       heatmapConfig.container = heatmapContainer;
-      var heatmap = h337.create(heatmapConfig);
+      heatmap = h337.create(heatmapConfig);
       $(document).trigger("heatmap-added");
       var $heatmapUITrigger = $('<button id="heatmapUITrigger" type="button" class="action-button">Heatmap</button>');
       $heatmapUITrigger.css({

@@ -98,23 +98,43 @@ record_heatmap <- function(
       )
     )
     
-    session$userData$heatmap <- list()
+    init_heatmap_storage(session, target)
   }, once = TRUE)
   
-  # Record new data
+  # Record new data at each click or move on the DOM
+  # Coordinates are captured on the JS side.
+  heatmap_ts <- reactiveVal(format(Sys.time(), format = "%F_%R_%Z"))
   observeEvent({
     session$input$heatmap_data
   }, {
-    heatmap_len <- length(session$userData$heatmap) + 1
-    session$userData$heatmap[[heatmap_len]] <- list(
+    
+    # Add new timestamp. If timestamp is new, we 
+    # will write in a new file and also reset storage data
+    # so we don't overcount clicks.
+    new_timestamp <- format(Sys.time(), format = "%F_%R_%Z")
+    if (heatmap_ts() != new_timestamp) {
+      heatmap_ts(new_timestamp)
+      # clear list
+      init_heatmap_storage(session, target)
+    }
+    
+    new_data <- list(
       x = session$input$heatmap_data$x,
       y = session$input$heatmap_data$y,
       value = session$input$heatmap_data$value
     )
+    if (!is.null(target)) {
+      heatmap_len <- length(session$userData$heatmap[[target]]) + 1
+      session$userData$heatmap[[target]][[heatmap_len]] <- new_data
+      data_to_save <- session$userData$heatmap[[target]]
+    } else {
+      heatmap_len <- length(session$userData$heatmap) + 1
+      session$userData$heatmap[[heatmap_len]] <- new_data
+      data_to_save <- session$userData$heatmap
+    }
     
-    # convert data to JSON and save them to disk
-    session$userData$heatmap_json <- toJSON(
-      session$userData$heatmap,
+    data_to_save <- toJSON(
+      data_to_save,
       auto_unbox = TRUE,
       pretty = TRUE
     )
@@ -125,15 +145,29 @@ record_heatmap <- function(
       sprintf(
         "heatmap-%s-ts_%s.json", 
         platform,
-        format(Sys.time(), format = "%F_%R_%Z")
+        heatmap_ts()
       )
     )
     
     # update JSON file
-    write(session$userData$heatmap_json, file_path)
+    write(data_to_save, file_path)
   })
 }
 
+#' Initialize heatmap data temporary storage.
+#'
+#' @inheritParams record_heatmap
+#'
+#' @return Side effect to create a list in
+#' session$userData and store the heatmap data.
+#' @keywords internal
+init_heatmap_storage <- function(session, target) {
+  session$userData$heatmap <- list()
+  # For multiple tabs, we need to store in sub lists.
+  if (!is.null(target)) {
+    session$userData$heatmap[[target]] <- list()
+  }
+}
 
 #' Download heatmap UI
 #'
@@ -196,7 +230,7 @@ get_heatmap_records <- function(path) {
 #' @export
 read_heatmap_records <- function(records, viewport_dims) {
   tmp_data <- unlist(
-    lapply(records, read_json), 
+    lapply(records, read_json),
     recursive = FALSE
   )
   
@@ -205,7 +239,7 @@ read_heatmap_records <- function(records, viewport_dims) {
     if (length(d$x) > 0 && length(d$y) > 0) {
       d$x <- round(d$x * viewport_dims$width)
       d$y <- round(d$y * viewport_dims$height)
-      d 
+      d
     }
   })
 }
@@ -274,7 +308,7 @@ download_heatmap <- function(
     readLines(file.path(data_path(), "target.txt"))
   })
   
-  setup_pushbar()
+  setup_pushbar(overlay = FALSE)
   
   observeEvent(session$input$heatmapUITrigger, {
     if (show_ui) {

@@ -176,6 +176,8 @@ init_heatmap_storage <- function(session, target) {
 #' @importFrom pushbar pushbar
 download_heatmap_ui <- function() {
   pushbar(
+    class = "shiny-input-panel",
+    style = "background: gainsboro",
     from = "bottom",
     id = "shiny-heatmap-ui",
     h1("shinyHeatmap UI"),

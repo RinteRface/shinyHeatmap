@@ -5,9 +5,9 @@
 \title{Show recorded heatmap}
 \usage{
 download_heatmap(
+  trigger = NULL,
   path = "www",
   filename = "heatmap.png",
-  target = ".container-fluid",
   timeout = 10,
   show_ui = TRUE,
   options = NULL,
@@ -15,13 +15,12 @@ download_heatmap(
 )
 }
 \arguments{
+\item{trigger}{Reactive trigger to initialized the heatmap
+recording. This is useful if your app contains tabs or navbar.}
+
 \item{path}{Previously saved heatmap data for persistence.}
 
 \item{filename}{Screenshot file name.}
-
-\item{target}{Container selector hosting the heatmap canvas.
-Default to Shiny fluidPage container. Be careful to change it if
-you use another template.}
 
 \item{timeout}{Necessary if the page needs time to load.
 Expressed in milliseconds.}
@@ -31,7 +30,7 @@ Expressed in milliseconds.}
 \item{options}{Slot for heatmap options. Expect a (nested) list.
 See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.}
 
-\item{session}{Shiny session object.}
+\item{session}{Shiny session object. Useful to store heatmap data.}
 }
 \description{
 Show and download \link{record_heatmap} data.

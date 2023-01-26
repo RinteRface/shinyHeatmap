@@ -37,6 +37,8 @@ heatmap_deps <- function() {
 #' containing the current click data to be recorded
 #' to the file
 #' 
+#' @param trigger Reactive trigger to initialized the heatmap
+#' recording. This is useful if your app contains tabs or navbar.
 #' @param path Previously saved heatmap data for persistence.
 #' @param target Container selector hosting the heatmap canvas.
 #' Default to Shiny fluidPage container. Be careful to change it if
@@ -50,6 +52,7 @@ heatmap_deps <- function() {
 #' @importFrom shiny observeEvent 
 #' @importFrom jsonlite fromJSON toJSON
 record_heatmap <- function(
+    trigger = NULL,
     path = "www",
     target = ".container-fluid", 
     type = c("click", "move"),
@@ -57,11 +60,34 @@ record_heatmap <- function(
     session = shiny::getDefaultReactiveDomain()
 ) {
   type <- match.arg(type)
+  if (!is.reactive(trigger)) {
+    stop(
+      "trigger must be a reactive expression:
+      reactive(input$<name>)."
+    )
+  }
   
-  if (!dir.exists(path)) dir.create(path)
+  heatmap_data_path <- reactive({
+    if (!is.null(trigger)) {
+      path <- file.path(path, tolower(trigger()))
+    }
+    path
+  })
   
   # init heatmap container with tracking enabled
-  observeEvent(TRUE, {
+  observeEvent({
+    if (is.null(trigger)) TRUE else trigger()
+  }, {
+    # create file path for recording
+    if (!dir.exists(heatmap_data_path())) {
+      dir.create(heatmap_data_path(), recursive = TRUE)
+    }
+    
+    # Write target used to record the heatmap
+    # Necessary for download_heatmap.
+    write(target, file.path(heatmap_data_path(), "target.txt"))
+    
+    # Send message to JS
     session$sendCustomMessage(
       "initialize_container", 
       list(
@@ -95,17 +121,16 @@ record_heatmap <- function(
     
     platform <- if (session$input$isMobile) "mobile" else "desktop"
     file_path <- file.path(
-      path, 
+      heatmap_data_path(), 
       sprintf(
-        "heatmap-%s-timestamp_%s.json", 
+        "heatmap-%s-ts_%s.json", 
         platform,
         format(Sys.time(), format = "%F_%R_%Z")
       )
     )
-    con <- file(file_path, open = "w")
+    
     # update JSON file
     write(session$userData$heatmap_json, file_path)
-    close(con)
   })
 }
 
@@ -206,35 +231,48 @@ take_heatmap_screenshot <- function(filename, target) {
 #' Show recorded heatmap
 #' 
 #' Show and download \link{record_heatmap} data.
-#' 
-#' @param path Previously saved heatmap data for persistence.
+#' @inheritParams record_heatmap
 #' @param filename Screenshot file name.
-#' @param target Container selector hosting the heatmap canvas.
-#' Default to Shiny fluidPage container. Be careful to change it if
-#' you use another template.
-#' @param timeout Necessary if the page needs time to load. 
-#' Expressed in milliseconds.
 #' @param show_ui Whether to show the download UI. Default to TRUE.
 #' @param options Slot for heatmap options. Expect a (nested) list.
 #' See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.
-#' @param session Shiny session object.
 #'
 #' @export
 #' @importFrom jsonlite read_json toJSON
 #' @importFrom shiny observeEvent updateSliderInput req renderPrint
 #' @importFrom pushbar setup_pushbar pushbar_open
 download_heatmap <- function(
+    trigger = NULL,
     path = "www",
     filename = "heatmap.png", 
-    target = ".container-fluid",
     timeout = 10,
     show_ui = TRUE,
     options = NULL,
     session = shiny::getDefaultReactiveDomain()
 ) {
   
+  if (!is.reactive(trigger)) {
+    stop(
+      "trigger must be a reactive expression:
+      reactive(input$<name>)."
+    )
+  }
   output <- get("output", envir = parent.frame(n = 1))
-  heatmap_files <- get_heatmap_records(path)
+  
+  data_path <- reactive({
+    if (!is.null(trigger)) {
+      path <- file.path(path, tolower(trigger()))
+    }
+    path
+  })
+  
+  heatmap_files <- reactive({
+    get_heatmap_records(data_path())
+  })
+  
+  target <- reactive({
+    readLines(file.path(data_path(), "target.txt"))
+  })
   
   setup_pushbar()
   
@@ -245,15 +283,15 @@ download_heatmap <- function(
   })
   
   # Populate date select input based on recorded files
-  observeEvent(TRUE, {
+  observeEvent(heatmap_files(), {
     updateSliderInput(
       session,
       "heatmap_date",
       min = 1,
-      max = length(heatmap_files),
-      value = length(heatmap_files)
+      max = length(heatmap_files()),
+      value = length(heatmap_files())
     )
-  }, once = TRUE)
+  })
   
   # Just show the date of the selected recording
   output$txt_date <- renderPrint({
@@ -267,7 +305,7 @@ download_heatmap <- function(
         " ",
         strsplit(
           strsplit(
-            heatmap_files[[session$input$heatmap_date]], 
+            heatmap_files()[[session$input$heatmap_date]], 
             "timestamp_"
           )[[1]][2],
           ".json"
@@ -281,7 +319,7 @@ download_heatmap <- function(
   observeEvent(session$input$heatmap_date, {
     # Read and process data with current screensize
     processed_data <- read_heatmap_records(
-      heatmap_files[1:session$input$heatmap_date],
+      heatmap_files()[1:session$input$heatmap_date],
       session$input$viewport_dims
     )
     
@@ -289,7 +327,7 @@ download_heatmap <- function(
     session$sendCustomMessage(
       "initialize_container", 
       list(
-        target = target,
+        target = target(),
         timeout = timeout,
         track = FALSE
       )
@@ -301,6 +339,7 @@ download_heatmap <- function(
     session$sendCustomMessage(
       "add_heatmap_data", 
       list(
+        id = if (!is.null(trigger)) tolower(trigger()),
         data = toJSON(
           processed_data, 
           auto_unbox = TRUE, 
@@ -312,14 +351,14 @@ download_heatmap <- function(
     
     # Automatically download screenshot if UI not visible
     if (!show_ui) {
-      take_heatmap_screenshot(filename, target)
+      take_heatmap_screenshot(filename, target())
     }
   }, ignoreInit = TRUE)
   
   # Take screenshot
   if (show_ui) {
     observeEvent(session$input$get_heatmap, {
-      take_heatmap_screenshot(filename, target)
+      take_heatmap_screenshot(filename, target())
     })
   }
 }

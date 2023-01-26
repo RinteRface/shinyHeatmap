@@ -5,6 +5,7 @@
 \title{Record heatmap data to a file}
 \usage{
 record_heatmap(
+  trigger = NULL,
   path = "www",
   target = ".container-fluid",
   type = c("click", "move"),
@@ -13,6 +14,9 @@ record_heatmap(
 )
 }
 \arguments{
+\item{trigger}{Reactive trigger to initialized the heatmap
+recording. This is useful if your app contains tabs or navbar.}
+
 \item{path}{Previously saved heatmap data for persistence.}
 
 \item{target}{Container selector hosting the heatmap canvas.

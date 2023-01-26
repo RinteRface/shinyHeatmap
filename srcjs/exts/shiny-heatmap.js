@@ -12,7 +12,8 @@ function exportViewportDims() {
 }
 
 $(document).ready(function(){
-  var heatmap, heatmapContainer, heatmapConfig;
+  var heatmaps = [];
+  var heatmapContainer, heatmapConfig;
   
   // Recover viewport dims to display correct coordinates
   $(document).on('shiny:connected', function() {
@@ -53,10 +54,10 @@ $(document).ready(function(){
   
   Shiny.addCustomMessageHandler('add_heatmap_data', function(m) {
     // don't recreate new container if it exists
-    if (window.heatmap === undefined) {
+    if (heatmaps[m.id] === undefined) {
       heatmapConfig = m.options || {};
       heatmapConfig.container = heatmapContainer;
-      heatmap = h337.create(heatmapConfig);
+      var heatmap = h337.create(heatmapConfig);
       $(document).trigger("heatmap-added");
       var $heatmapUITrigger = $('<button id="heatmapUITrigger" type="button" class="action-button">Heatmap</button>');
       $heatmapUITrigger.css({
@@ -84,7 +85,7 @@ $(document).ready(function(){
     
     heatmap.setData({ data: m.data });
     // export heatmap to window (mostly for debug purpose)
-    window.heatmap = heatmap;
+    heatmaps[m.id] = heatmap;
   });
   
   // set z-index to make sure it is always visible

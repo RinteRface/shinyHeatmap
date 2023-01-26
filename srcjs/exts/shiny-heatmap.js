@@ -57,29 +57,56 @@ $(document).ready(function(){
       heatmapConfig = m.options || {};
       heatmapConfig.container = heatmapContainer;
       heatmap = h337.create(heatmapConfig);
+      
       $(document).trigger("heatmap-added");
-      var $heatmapUITrigger = $('<button id="heatmapUITrigger" type="button" class="action-button">Heatmap</button>');
-      $heatmapUITrigger.css({
+      
+      var $heatmapUITrigger;
+      if (m.showUI) {
+        $heatmapUITrigger = $('<button id="heatmapUITrigger" type="button" class="action-button">Heatmap options</button>');
+        $heatmapUITrigger.css({
+          position: 'fixed',
+          top: '20px',
+          right: '140px',
+          height: '40px',
+          'border-radius': '5px',
+          'z-index': '99999',
+          opacity: '.7'
+        });
+      }
+      
+      var $toggleHeatmap = $('<button id="toggleHeatmapTrigger" type="button" class="action-button bg-grey">Toggle heatmap</button>');
+      
+      $toggleHeatmap.css({
         position: 'fixed',
         top: '20px',
-        right: '50px',
+        right: '20px',
         height: '40px',
         'border-radius': '5px',
         'z-index': '99999',
         opacity: '.7'
       });
-
-      $heatmapUITrigger.on('mouseenter', function () {
+      
+      $toggleHeatmap.add($heatmapUITrigger).on('mouseenter', function () {
         $(this).css('opacity', '1');
       });
 
-      $heatmapUITrigger.on('mouseout', function () {
+      $toggleHeatmap.add($heatmapUITrigger).on('mouseout', function () {
         $(this).css('opacity', '.7');
       });
+      
+      // Give possibility to hide heatmap
+      $toggleHeatmap.on('click', function() {
+        $('.heatmap-canvas').toggle();
+      });
 
-      $('body').append($heatmapUITrigger);
+      $('body').append([$heatmapUITrigger, $toggleHeatmap]);
       // Don't forget to bind new shiny input
       Shiny.bindAll();
+    }
+    
+    // Show canvas each time data are updated
+    if($('.heatmap-canvas').is(':visible') === false) {
+      $('.heatmap-canvas').show();
     }
     
     heatmap.setData({ data: m.data });

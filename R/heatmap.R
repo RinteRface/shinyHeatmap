@@ -332,7 +332,7 @@ download_heatmap <- function(
     readLines(file.path(data_path(), "target.txt"))
   })
   
-  setup_pushbar(overlay = FALSE)
+  setup_pushbar()
   
   observeEvent(session$input$heatmapUITrigger, {
     if (show_ui) {
@@ -341,7 +341,6 @@ download_heatmap <- function(
   })
   
   # Populate date select input based on recorded files
-  slider_updated <- reactiveVal(FALSE)
   observeEvent(heatmap_files(), {
     updateSliderInput(
       session,
@@ -350,15 +349,13 @@ download_heatmap <- function(
       max = length(heatmap_files()),
       value = length(heatmap_files())
     )
-    slider_updated(TRUE)
   })
   
   # Just show the date of the selected recording
-  output$txt_date <- renderPrint({
+  observeEvent(session$input$heatmap_date, {
     # Bug in Shiny sliderInput with timezone
     # always returns UTC no matter the provided time...
     # We have to reconvert
-    req(session$input, slider_updated())
     selected_date <- as.POSIXct(
       gsub(
         "_", 
@@ -366,23 +363,18 @@ download_heatmap <- function(
         strsplit(
           strsplit(
             heatmap_files()[[session$input$heatmap_date]], 
-            "timestamp_"
+            "ts_"
           )[[1]][2],
           ".json"
         )[[1]][1]
       )
     )
-    sprintf("Latest date: %s", selected_date)
+    updateSliderInput(
+      session, 
+      "heatmap_date", 
+      label = sprintf("Latest date: %s", selected_date)
+    )
   })
-  
-  # Reset slider_updated status whenever target is changed
-  if (!is.null(target)) {
-    observeEvent({
-      target()
-    }, {
-      slider_updated(FALSE)
-    })
-  }
   
   # Process data, init canvas, show heatmap
   observeEvent(session$input$heatmap_date, {
@@ -413,6 +405,7 @@ download_heatmap <- function(
           auto_unbox = TRUE, 
           pretty = TRUE
         ),
+        showUI = show_ui,
         options = options
       )
     )

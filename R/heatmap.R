@@ -59,13 +59,8 @@ record_heatmap <- function(
     timeout = 10,
     session = shiny::getDefaultReactiveDomain()
 ) {
+  validate_heatmap_trigger(trigger)
   type <- match.arg(type)
-  if (!is.reactive(trigger)) {
-    stop(
-      "trigger must be a reactive expression:
-      reactive(input$<name>)."
-    )
-  }
   
   heatmap_data_path <- reactive({
     if (!is.null(trigger)) {
@@ -74,7 +69,9 @@ record_heatmap <- function(
     path
   })
   
-  # init heatmap container with tracking enabled
+  # Create heatmap folder.Happen either once
+  # if trigger is NULL or each time trigger is updated.
+  storage_initialized <- reactiveVal(FALSE)
   observeEvent({
     if (is.null(trigger)) TRUE else trigger()
   }, {
@@ -85,9 +82,25 @@ record_heatmap <- function(
     
     # Write target used to record the heatmap
     # Necessary for download_heatmap.
-    write(target, file.path(heatmap_data_path(), "target.txt"))
+    target_file_path <- file.path(heatmap_data_path(), "target.txt")
+    if (!file.exists(target_file_path)) {
+      write(target, target_file_path)
+    }
     
-    # Send message to JS
+    # Make sure this get only run once if trigger is NULL
+    if (
+      (is.null(trigger) && !storage_initialized()) ||
+      !is.null(trigger)
+    ) {
+      init_heatmap_storage(session, trigger)
+    }
+    storage_initialized(TRUE)
+  })
+  
+  # Init heatmap container with tracking enabled
+  # This has to happen only once.
+  observeEvent(TRUE, {
+    # Send message to JS to set up the heatmap canvas
     session$sendCustomMessage(
       "initialize_container", 
       list(
@@ -97,9 +110,7 @@ record_heatmap <- function(
         track = TRUE
       )
     )
-    
-    init_heatmap_storage(session, target)
-  }, once = TRUE)
+  })
   
   # Record new data at each click or move on the DOM
   # Coordinates are captured on the JS side.
@@ -108,14 +119,14 @@ record_heatmap <- function(
     session$input$heatmap_data
   }, {
     
-    # Add new timestamp. If timestamp is new, we 
+    # Add new timestamp. If timestamp is different, we 
     # will write in a new file and also reset storage data
     # so we don't overcount clicks.
     new_timestamp <- format(Sys.time(), format = "%F_%R_%Z")
     if (heatmap_ts() != new_timestamp) {
       heatmap_ts(new_timestamp)
       # clear list
-      init_heatmap_storage(session, target)
+      init_heatmap_storage(session, trigger)
     }
     
     new_data <- list(
@@ -123,10 +134,10 @@ record_heatmap <- function(
       y = session$input$heatmap_data$y,
       value = session$input$heatmap_data$value
     )
-    if (!is.null(target)) {
-      heatmap_len <- length(session$userData$heatmap[[target]]) + 1
-      session$userData$heatmap[[target]][[heatmap_len]] <- new_data
-      data_to_save <- session$userData$heatmap[[target]]
+    if (!is.null(trigger)) {
+      heatmap_len <- length(session$userData$heatmap[[trigger()]]) + 1
+      session$userData$heatmap[[trigger()]][[heatmap_len]] <- new_data
+      data_to_save <- session$userData$heatmap[[trigger()]]
     } else {
       heatmap_len <- length(session$userData$heatmap) + 1
       session$userData$heatmap[[heatmap_len]] <- new_data
@@ -161,11 +172,11 @@ record_heatmap <- function(
 #' @return Side effect to create a list in
 #' session$userData and store the heatmap data.
 #' @keywords internal
-init_heatmap_storage <- function(session, target) {
+init_heatmap_storage <- function(session, trigger) {
   session$userData$heatmap <- list()
   # For multiple tabs, we need to store in sub lists.
-  if (!is.null(target)) {
-    session$userData$heatmap[[target]] <- list()
+  if (!is.null(trigger)) {
+    session$userData$heatmap[[trigger()]] <- list()
   }
 }
 
@@ -264,6 +275,23 @@ take_heatmap_screenshot <- function(filename, target) {
   Sys.sleep(1)
 }
 
+#' Safety checks
+#'
+#' @inheritParams record_heatmap
+#'
+#' @return Stop app if conditions are not met.
+#' @keywords internal
+validate_heatmap_trigger <- function(trigger) {
+  if (!is.null(trigger)) {
+    if (!is.reactive(trigger)) {
+      stop(
+        "trigger must be a reactive expression:
+        reactive(input$<name>)."
+      )
+    }
+  }
+}
+
 #' Show recorded heatmap
 #' 
 #' Show and download \link{record_heatmap} data.
@@ -286,13 +314,7 @@ download_heatmap <- function(
     options = NULL,
     session = shiny::getDefaultReactiveDomain()
 ) {
-  
-  if (!is.reactive(trigger)) {
-    stop(
-      "trigger must be a reactive expression:
-      reactive(input$<name>)."
-    )
-  }
+  validate_heatmap_trigger(trigger)
   output <- get("output", envir = parent.frame(n = 1))
   
   data_path <- reactive({
@@ -319,6 +341,7 @@ download_heatmap <- function(
   })
   
   # Populate date select input based on recorded files
+  slider_updated <- reactiveVal(FALSE)
   observeEvent(heatmap_files(), {
     updateSliderInput(
       session,
@@ -327,6 +350,7 @@ download_heatmap <- function(
       max = length(heatmap_files()),
       value = length(heatmap_files())
     )
+    slider_updated(TRUE)
   })
   
   # Just show the date of the selected recording
@@ -334,7 +358,7 @@ download_heatmap <- function(
     # Bug in Shiny sliderInput with timezone
     # always returns UTC no matter the provided time...
     # We have to reconvert
-    req(session$input)
+    req(session$input, slider_updated())
     selected_date <- as.POSIXct(
       gsub(
         "_", 
@@ -350,6 +374,15 @@ download_heatmap <- function(
     )
     sprintf("Latest date: %s", selected_date)
   })
+  
+  # Reset slider_updated status whenever target is changed
+  if (!is.null(target)) {
+    observeEvent({
+      target()
+    }, {
+      slider_updated(FALSE)
+    })
+  }
   
   # Process data, init canvas, show heatmap
   observeEvent(session$input$heatmap_date, {
@@ -375,7 +408,6 @@ download_heatmap <- function(
     session$sendCustomMessage(
       "add_heatmap_data", 
       list(
-        id = if (!is.null(trigger)) tolower(trigger()),
         data = toJSON(
           processed_data, 
           auto_unbox = TRUE, 

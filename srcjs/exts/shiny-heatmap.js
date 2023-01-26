@@ -12,7 +12,6 @@ function exportViewportDims() {
 }
 
 $(document).ready(function(){
-  var heatmaps = [];
   var heatmap, heatmapContainer, heatmapConfig;
   
   // Recover viewport dims to display correct coordinates
@@ -54,7 +53,7 @@ $(document).ready(function(){
   
   Shiny.addCustomMessageHandler('add_heatmap_data', function(m) {
     // don't recreate new container if it exists
-    if (heatmaps[m.id] === undefined) {
+    if (window.heatmap === undefined) {
       heatmapConfig = m.options || {};
       heatmapConfig.container = heatmapContainer;
       heatmap = h337.create(heatmapConfig);
@@ -85,7 +84,7 @@ $(document).ready(function(){
     
     heatmap.setData({ data: m.data });
     // export heatmap to window (mostly for debug purpose)
-    heatmaps[m.id] = heatmap;
+    window.heatmap = heatmap;
   });
   
   // set z-index to make sure it is always visible

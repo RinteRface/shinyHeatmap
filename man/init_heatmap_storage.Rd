@@ -4,14 +4,13 @@
 \alias{init_heatmap_storage}
 \title{Initialize heatmap data temporary storage.}
 \usage{
-init_heatmap_storage(session, target)
+init_heatmap_storage(session, trigger)
 }
 \arguments{
 \item{session}{Shiny session object. Useful to store heatmap data.}
 
-\item{target}{Container selector hosting the heatmap canvas.
-Default to Shiny fluidPage container. Be careful to change it if
-you use another template.}
+\item{trigger}{Reactive trigger to initialized the heatmap
+recording. This is useful if your app contains tabs or navbar.}
 }
 \value{
 Side effect to create a list in

@@ -1,8 +1,6 @@
 library(shiny)
 library(shinyHeatmap)
 
-tabs <- c("Plot", "Summary", "Table")
-
 # Define UI for application that draws a histogram
 ui <- with_heatmap(
   navbarPage(
@@ -51,18 +49,11 @@ ui <- with_heatmap(
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
-  lapply(tabs, function(tab) {
-    trig <- reactive({
-      req(input$navbar == tab)
-      # To get the proper file name we also return the input value
-      input$navbar
-    })
-    #record_heatmap(
-    #  trigger = trig,
-    #  target = "body"
-    #)
-    download_heatmap(trigger = trig)
-  })
+  #record_heatmap(
+  #  trigger = reactive(input$navbar),
+  #  target = "body"
+  #)
+  download_heatmap(trigger = reactive(input$navbar))
   
   output$plot <- renderPlot({
     plot(cars, type=input$plotType)

@@ -157,12 +157,6 @@ download_heatmap <- function(
     ...
 ) {
   validate_heatmap_trigger(trigger)
-  # Depends whether it's called from process_heatmap.
-  n_frame <- if (length(deparse(sys.call())) > 1) 4 else 1
-  output <- get(
-    "output", 
-    envir = parent.frame(n = n_frame)
-  )
   
   data_path <- reactive({
     if (!is.null(trigger)) {
@@ -297,41 +291,23 @@ process_heatmap <- function(...) {
     )
   }
   
-  # Setup mode
-  if (!is.null(getOption("shinyheatmap.mode"))) {
-   mode <- getOption("shinyheatmap.mode")
-   if (!(mode %in% c("record", "display"))) {
-     stop("mode can be either 'record' or 'display'.")
-   }
-  } else {
-    mode <- "record"
-  }
-
-  heatmap_func <- switch(mode,
-    "record" = quote(do.call(record_heatmap, list(...))),
-    "display" = quote(do.call(download_heatmap, list(...)))
-  )
-  eval(heatmap_func)
-}
-
-
-#' Get heatmap from running Shiny app.
-#'
-#' This is the default function to use to collect
-#' heatmap data.
-#'
-#' @param url Shiny app url. Can be localhost or 
-#' server deployed app.
-#' @param shiny_options Extra options to pass to shinytest2.
-#'
-#' @return Run the Shiny app with heatmap display.
-#' @export
-get_heatmap <- function(url, shiny_options = NULL) {
-  shinytest2::AppDriver$new(
-    url = url,
-    options = c(
-      list("shinyheatmap.mode" = "display"), 
-      list(shiny_options)
-    )
-  )
+  # process_heatmap is called in server.R
+  session <- get("session", envir = parent.frame(n = 1))
+  
+  # Trigger once
+  observeEvent({
+    session$clientData
+  }, {
+    clientData <- session$clientData
+    res <- parseQueryString(clientData$url_search)
+    if (length(res) > 0) {
+      # get the query and send it to JS
+      # to trigger a click on the project button
+      mode <-  if (length(res) > 0 && names(res) == "get_heatmap") {
+        do.call(download_heatmap, list(...))
+      } 
+    } else {
+      do.call(record_heatmap, list(...))
+    }
+  })
 }

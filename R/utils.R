@@ -8,7 +8,7 @@
 #' @importFrom pushbar pushbar_deps
 #' 
 #' @export
-with_heatmap <- function(...){
+with_heatmap <- function(...) {
   tagList(
     ...,
     download_heatmap_ui(),

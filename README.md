@@ -81,11 +81,11 @@ such as [{waiter}](https://github.com/JohnCoene/waiter).
 
 3. Locally, you can test your heatmap recording by using `download_heatmap()` to your app server which will read data stored in the JSON files, generate the heatmap and save it as a png file. By default, `download_heatmap()` will show a tiny UI below your app. It allows to see a timeline of the app usage as shown below. To disable the UI, you can call `download_heatmap(show_ui = FALSE)`, which will show all the aggregated data as well as take a screenshot of the heatmap area.
 
-4. Deploy the app in the server of your choice (Rstudio Connect, Shiny server, ...).
+4. Deploy the app on the server of your choice (Rstudio Connect, Shiny server, ...) and let the end-users interact with it. 
 
-5. To preview the heatmap from deployed app, you can use `get_heatmap("<APP_URL>")`, which will run the deployed app
+5. To preview the heatmap from deployed app, you can specify a query parameter `?get_heatmap` to the app url, which will run the deployed app
 in display mode so that you don't record extra actions by 
-interacting with it. 
+interacting with it.
 
 Don't forget to remove `record_heatmap()` if you don't want to generate extra logs! In general, you don't want to use `download_heatmap()` on a deployed app since end users might not be supposed to access and view usage data.
 

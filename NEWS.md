@@ -1,6 +1,12 @@
 # shinyHeatmap 0.2.0.9000
 
 ## New feature
+- Introducing `process_heatmap()`, a wrapper around `record_heatmap()`
+and `download_heatmap()`. `process_heatmap()` will record the heatmap
+by default unless you set `options("shinyheatmap.mode" = 'display')`,
+which will allow to display the results.
+- Introducing `get_heatmap()` to get heatmap from remote apps or local apps.
+Prefer this new function as `download_heatmap()`.
 - Added support for tabs-based apps like `shiny::navbarPage()` (see below for the consequences).
 - You can now toggle the heatmap visibility while running
 `record_heatmap()` so as to be able to change page in multi-tabs

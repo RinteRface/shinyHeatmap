@@ -10,6 +10,7 @@
 ^\.github$
 ^LICENSE\.md$
 inst/examples/basic/www
+inst/examples/navbar/www
 inst/examples/bs4Dash/www
 inst/examples/commute-explorer/www
 inst/examples/options/www

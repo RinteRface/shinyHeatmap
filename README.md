@@ -67,23 +67,27 @@ heatmap data are stored in `www/heatmap-data.json` by default.
 1. In `ui.R`, wrap the UI inside `with_heatmap()`. This initializes the canvas
 to record the click coordinates.
 
-2. In `server.R`, call `record_heatmap()`. Overall, this recovers the
+2. In `server.R`, call `process_heatmap()`. Overall, this recovers the
 coordinates of each click on the JS side and store them in 
 `www/heatmap-<USER_AGENT>-<DATE>.json`. 
 This may be used later to preview the heatmap by aggregating all compatible user sessions. 
-For instance, mobile platforms are not aggregated with destkop since coordinates would be
+For instance, mobile platforms are not aggregated with desktop since coordinates would be
 incorrect. With vanilla `{shiny}` templates like `fluidPage`, 
 you don't need to change anything. However, with more complex 
-templates, you can pass the target CSS selector of the heatmap 
-container with `record_heatmap(target = ".wrapper")`. 
+templates, you can pass the heatmap container CSS selector with the __target__ parameter such as `process_heatmap(target = ".wrapper")`. 
 If the app takes time to load, a __timeout__ parameters is available. 
 This could be the case when you rely on packages
 such as [{waiter}](https://github.com/JohnCoene/waiter).
 
-3. To download the heatmap locally, you must add `download_heatmap()` to your app, which will read data stored in the JSON files, generate the heatmap and save it as a png file. By default, `download_heatmap()`
-will show a tiny UI below your app. It allows to see a timeline of the app usage as shown below.
-To disable the UI, you can call `download_heatmap(show_ui = FALSE)`, which will show
-all the aggregated data as well as take a screenshot of the heatmap area. Don't forget to remove `record_heatmap()` if you don't want to generate extra logs! In general, you don't want to use `download_heatmap()` on a deployed app since end users might not be supposed to access and view usage data.
+3. Locally, you can test your heatmap recording by using `download_heatmap()` to your app server which will read data stored in the JSON files, generate the heatmap and save it as a png file. By default, `download_heatmap()` will show a tiny UI below your app. It allows to see a timeline of the app usage as shown below. To disable the UI, you can call `download_heatmap(show_ui = FALSE)`, which will show all the aggregated data as well as take a screenshot of the heatmap area.
+
+4. Deploy the app in the server of your choice (Rstudio Connect, Shiny server, ...).
+
+5. To preview the heatmap from deployed app, you can use `get_heatmap("<APP_URL>")`, which will run the deployed app
+in display mode so that you don't record extra actions by 
+interacting with it. 
+
+Don't forget to remove `record_heatmap()` if you don't want to generate extra logs! In general, you don't want to use `download_heatmap()` on a deployed app since end users might not be supposed to access and view usage data.
 
 Below shows an example to record the heatmap:
 
@@ -116,7 +120,7 @@ ui <- with_heatmap(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-  record_heatmap()
+  process_heatmap()
   
   output$distPlot <- renderPlot({
     # generate bins based on input$bins from ui.R
@@ -138,8 +142,7 @@ with sidebar items, you'll need to record one heatmap per tab. This
 can be achieve since `{shinyHeatmap}` __0.2.0.9000__ like below:
 
 - Give an id to the navbar menu.
-- Pass it in the `trigger` parameter of `record_heatmap()` and
-`download_heatmap()`.
+- Pass it in the `trigger` parameter of `process_heatmap()` or `record_heatmap()` and `download_heatmap()`.
 
 To be able to browse between multiple pages, you'll have to toggle
 the heatmap visibility thanks to the new button. This is necessary because the heatmap z-index is set to the maximum and you can't click anywhere else after, expect the toggle heatmap button.
@@ -200,7 +203,9 @@ server <- function(input, output, session) {
   #  trigger = reactive(input$navbar),
   #  target = "body"
   #)
-  download_heatmap(trigger = reactive(input$navbar))
+  #download_heatmap(trigger = reactive(input$navbar))
+  
+  process_heatmap(trigger = reactive(input$navbar))
   
   output$plot <- renderPlot({
     plot(cars, type=input$plotType)

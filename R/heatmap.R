@@ -47,9 +47,10 @@ heatmap_deps <- function() {
 #' @param timeout Necessary if the page needs time to load. 
 #' Expressed in milliseconds.
 #' @param session Shiny session object. Useful to store heatmap data.
+#' @param ... Internal. Don't use.
 #'
 #' @export
-#' @importFrom shiny observeEvent 
+#' @importFrom shiny observeEvent reactive reactiveVal
 #' @importFrom jsonlite fromJSON toJSON
 record_heatmap <- function(
     trigger = NULL,
@@ -57,7 +58,8 @@ record_heatmap <- function(
     target = ".container-fluid", 
     type = c("click", "move"),
     timeout = 10,
-    session = shiny::getDefaultReactiveDomain()
+    session = shiny::getDefaultReactiveDomain(),
+    ...
 ) {
   validate_heatmap_trigger(trigger)
   type <- match.arg(type)
@@ -216,7 +218,7 @@ download_heatmap_ui <- function() {
 #'
 #' List all heatmap recordings
 #'
-#' @param path Recordings location
+#' @param path Recordings location.
 #'
 #' @return A vector containing full path to recordings.
 #' @export
@@ -281,6 +283,7 @@ take_heatmap_screenshot <- function(filename, target) {
 #'
 #' @return Stop app if conditions are not met.
 #' @keywords internal
+#' @importFrom shiny is.reactive
 validate_heatmap_trigger <- function(trigger) {
   if (!is.null(trigger)) {
     if (!is.reactive(trigger)) {
@@ -312,10 +315,16 @@ download_heatmap <- function(
     timeout = 10,
     show_ui = TRUE,
     options = NULL,
-    session = shiny::getDefaultReactiveDomain()
+    session = shiny::getDefaultReactiveDomain(),
+    ...
 ) {
   validate_heatmap_trigger(trigger)
-  output <- get("output", envir = parent.frame(n = 1))
+  # Depends whether it's called from process_heatmap.
+  n_frame <- if (length(deparse(sys.call())) > 1) 4 else 1
+  output <- get(
+    "output", 
+    envir = parent.frame(n = n_frame)
+  )
   
   data_path <- reactive({
     if (!is.null(trigger)) {
@@ -422,4 +431,69 @@ download_heatmap <- function(
       take_heatmap_screenshot(filename, target())
     })
   }
+}
+
+
+#' Either record or show heatmap depending on
+#' configuration.
+#' 
+#' By default, \link{process_heatmap} records the heatmap.
+#' However, if you set \code{options("shinyheatmap.mode" = 'display')},
+#' the function will run in display mode to see the results.
+#' This is useful if you want to use shinytest2 to control
+#' the app and display the results without affecting the deployed 
+#' production app.
+#' 
+#' @param ... Pass in parameters for \link{record_heatmap} and
+#' \link{download_heatmap}.
+#'
+#' @export
+process_heatmap <- function(...) {
+  caller_func <- deparse(sys.call())
+  if (!shiny::isRunning()) {
+    stop(
+      sprintf(
+        "%s must run inside Shiny server session.",
+        caller_func
+      )
+    )
+  }
+  
+  # Setup mode
+  if (!is.null(getOption("shinyheatmap.mode"))) {
+   mode <- getOption("shinyheatmap.mode")
+   if (!(mode %in% c("record", "display"))) {
+     stop("mode can be either 'record' or 'display'.")
+   }
+  } else {
+    mode <- "record"
+  }
+  
+  heatmap_func <- switch(mode,
+    "record" = quote(do.call(record_heatmap, list(...))),
+    "display" = quote(do.call(download_heatmap, list(...)))
+  )
+  eval(heatmap_func)
+}
+
+
+#' Get heatmap from running Shiny app.
+#'
+#' This is the default function to use to collect
+#' heatmap data.
+#'
+#' @param url Shiny app url. Can be localhost or 
+#' server deployed app.
+#' @param options Extra options to pass to shinytest2.
+#'
+#' @return Run the Shiny app with heatmap display.
+#' @export
+get_heatmap <- function(url, options = NULL) {
+  shinytest2::AppDriver$new(
+    url = url,
+    options = c(
+      list("shinyheatmap.mode" = "display"), 
+      list(options)
+    )
+  )
 }

@@ -10,7 +10,8 @@ record_heatmap(
   target = ".container-fluid",
   type = c("click", "move"),
   timeout = 10,
-  session = shiny::getDefaultReactiveDomain()
+  session = shiny::getDefaultReactiveDomain(),
+  ...
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ you use another template.}
 Expressed in milliseconds.}
 
 \item{session}{Shiny session object. Useful to store heatmap data.}
+
+\item{...}{Internal. Don't use.}
 }
 \description{
 On the JS side, Shiny creates a input$heatmap_data

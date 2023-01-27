@@ -11,7 +11,8 @@ download_heatmap(
   timeout = 10,
   show_ui = TRUE,
   options = NULL,
-  session = shiny::getDefaultReactiveDomain()
+  session = shiny::getDefaultReactiveDomain(),
+  ...
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ Expressed in milliseconds.}
 See \url{https://www.patrick-wied.at/static/heatmapjs/docs.html#heatmap-configure}.}
 
 \item{session}{Shiny session object. Useful to store heatmap data.}
+
+\item{...}{Internal. Don't use.}
 }
 \description{
 Show and download \link{record_heatmap} data.

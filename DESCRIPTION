@@ -16,7 +16,8 @@ Imports:
     jsonlite,
     pushbar,
     shiny,
-    shinyscreenshot
+    shinyscreenshot,
+    shinytest2
 URL: https://github.com/RinteRface/shinyHeatmap,
     https://rinterface.github.io/shinyHeatmap/
 BugReports: https://github.com/RinteRface/shinyHeatmap/issues

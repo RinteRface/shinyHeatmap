@@ -7,7 +7,7 @@
 get_heatmap_records(path)
 }
 \arguments{
-\item{path}{Recordings location}
+\item{path}{Recordings location.}
 }
 \value{
 A vector containing full path to recordings.

@@ -138,7 +138,7 @@ with sidebar items, you'll need to record one heatmap per tab. This
 can be achieve since `{shinyHeatmap}` __0.2.0.9000__ like below:
 
 - Give an id to the navbar menu.
-- Pass it in the `trigger` paramater of `record_heatmap()` and
+- Pass it in the `trigger` parameter of `record_heatmap()` and
 `download_heatmap()`.
 
 To be able to browse between multiple pages, you'll have to toggle

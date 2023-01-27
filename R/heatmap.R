@@ -303,7 +303,7 @@ process_heatmap <- function(...) {
     if (length(res) > 0) {
       # get the query and send it to JS
       # to trigger a click on the project button
-      mode <-  if (length(res) > 0 && names(res) == "get_heatmap") {
+      mode <-  if (length(res) > 0 && "get_heatmap" %in% names(res)) {
         do.call(download_heatmap, list(...))
       } 
     } else {

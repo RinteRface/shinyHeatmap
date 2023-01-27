@@ -41,9 +41,7 @@ ui <- with_heatmap(
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
-  
-  #record_heatmap(type = "move")
-  download_heatmap(
+  process_heatmap(
     options = list(
       radius = 10,
       maxOpacity = .5,

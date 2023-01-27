@@ -68,8 +68,7 @@ ui <- with_heatmap(
 
 server <- function(input, output, session) {
   
-  #record_heatmap(target = "body")
-  download_heatmap(target = "body")
+  process_heatmap(target = "body")
   
   filtered_deals <- reactive({
     req(input$fromDate)

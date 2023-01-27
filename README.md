@@ -59,13 +59,20 @@ devtools::install_github("RinteRface/shinyHeatmap")
 
 ## Getting started
 
+`{shinyHeatmap}` only requires 2 functions:
+
+- `with_heatmap()`, on the UI side.
+- `process_heatmap()`, on the server side.
+
+In the following part, we provide more instructions.
+
 ### How to use it
 
 The app must have a `www` folder since 
 heatmap data are stored in `www/heatmap-data.json` by default.
 
-1. In `ui.R`, wrap the UI inside `with_heatmap()`. This initializes the canvas
-to record the click coordinates.
+1. In `ui.R`, wrap the UI inside `with_heatmap()`. This contains all necessary dependencies (JavaScript code, ...) to record and display
+the heatmap.
 
 2. In `server.R`, call `process_heatmap()`. Overall, this recovers the
 coordinates of each click on the JS side and store them in 
@@ -77,17 +84,25 @@ you don't need to change anything. However, with more complex
 templates, you can pass the heatmap container CSS selector with the __target__ parameter such as `process_heatmap(target = ".wrapper")`. 
 If the app takes time to load, a __timeout__ parameters is available. 
 This could be the case when you rely on packages
-such as [{waiter}](https://github.com/JohnCoene/waiter).
+such as [{waiter}](https://github.com/JohnCoene/waiter). For more
+complex patterns, you may want to use __trigger__ parameter to control
+when to record the heatmap. See the navbar example below.
 
-3. Locally, you can test your heatmap recording by using `download_heatmap()` to your app server which will read data stored in the JSON files, generate the heatmap and save it as a png file. By default, `download_heatmap()` will show a tiny UI below your app. It allows to see a timeline of the app usage as shown below. To disable the UI, you can call `download_heatmap(show_ui = FALSE)`, which will show all the aggregated data as well as take a screenshot of the heatmap area.
+3. Locally, you can test your heatmap recording by using browsing to 
+`http://127.0.0.1:<PORT>?get_heatmap`, `?get_heatmap` ensuring to run the app in preview mode for the heatmap. Under the hoods, `process_heatmap()` will call `download_heatmap()`, which will read data stored in the JSON files, generate the heatmap and save it as a png file. By default, `download_heatmap()` will show a tiny UI below your app. It allows to see a timeline of the app usage as shown below. To disable the UI, you can call `download_heatmap(show_ui = FALSE)`, which will show all the aggregated data as well as take a screenshot of the heatmap area.
 
 4. Deploy the app on the server of your choice (Rstudio Connect, Shiny server, ...) and let the end-users interact with it. 
 
-5. To preview the heatmap from deployed app, you can specify a query parameter `?get_heatmap` to the app url, which will run the deployed app
-in display mode so that you don't record extra actions by 
-interacting with it.
+5. To preview the heatmap from __deployed__ app, there are 2 solutions:
 
-Don't forget to remove `record_heatmap()` if you don't want to generate extra logs! In general, you don't want to use `download_heatmap()` on a deployed app since end users might not be supposed to access and view usage data.
+  - Browse to the app url with a query parameter such as `<APP_URL>?get_heatmap`, which will run the heatmap
+in __display__ mode so that you don't record extra actions by 
+interacting with it.
+  - Dump the deployed app `www` folder and copy it locally. Run
+  the local app with `<APP_URL>?get_heatmap` as in 3.
+
+Note: Since `process_heatmap()` is clever enough to switch between
+recording and display, we don't recommand using `record_heatmap()` or `download_heatmap()` directly. If you do, don't forget to remove `record_heatmap()` so that you don't generate extra logs when inspecting the heatmap.
 
 Below shows an example to record the heatmap:
 
@@ -141,11 +156,11 @@ For app with navbar like with `shiny::navbarPage()` or dashboard
 with sidebar items, you'll need to record one heatmap per tab. This
 can be achieve since `{shinyHeatmap}` __0.2.0.9000__ like below:
 
-- Give an id to the navbar menu.
-- Pass it in the `trigger` parameter of `process_heatmap()` or `record_heatmap()` and `download_heatmap()`.
+- Give an __id__ to the navbar menu.
+- Pass it in the __trigger__ parameter of `process_heatmap()` (or `record_heatmap()` and `download_heatmap()`).
 
-To be able to browse between multiple pages, you'll have to toggle
-the heatmap visibility thanks to the new button. This is necessary because the heatmap z-index is set to the maximum and you can't click anywhere else after, expect the toggle heatmap button.
+To browse between multiple pages, you'll have to toggle
+the heatmap visibility thanks to the new toggle button. This is necessary because the heatmap z-index is set to the maximum and you can't click anywhere else after, except the toggle heatmap button.
 
 ```r
 library(shiny)
@@ -233,7 +248,7 @@ in the heatmap.js [documentation](https://www.patrick-wied.at/static/heatmapjs/d
 For instance, below we change the points radius and color:
 
 ```r
-download_heatmap(
+process_heatmap(
   options = list(
     radius = 10,
     maxOpacity = .5,

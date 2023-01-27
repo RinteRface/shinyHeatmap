@@ -132,6 +132,94 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
+### App with navbar
+For app with navbar like with `shiny::navbarPage()` or dashboard
+with sidebar items, you'll need to record one heatmap per tab. This
+can be achieve since `{shinyHeatmap}` __0.2.0.9000__ like below:
+
+- Give an id to the navbar menu.
+- Pass it in the `trigger` paramater of `record_heatmap()` and
+`download_heatmap()`.
+
+To be able to browse between multiple pages, you'll have to toggle
+the heatmap visibility thanks to the new button. This is necessary because the heatmap z-index is set to the maximum and you can't click anywhere else after, expect the toggle heatmap button.
+
+```r
+library(shiny)
+library(shinyHeatmap)
+
+# Define UI for application that draws a histogram
+ui <- with_heatmap(
+  navbarPage(
+    id = "navbar",
+    "Navbar!",
+    tabPanel(
+      "Plot",
+      sidebarLayout(
+        sidebarPanel(radioButtons(
+          "plotType", "Plot type",
+          c("Scatter" = "p", "Line" = "l")
+        )),
+        mainPanel(plotOutput("plot"))
+      )
+    ),
+    tabPanel("Summary", verbatimTextOutput("summary")),
+    navbarMenu(
+      "More",
+      tabPanel("Table", DT::dataTableOutput("table")),
+      tabPanel(
+        "About",
+        fluidRow(
+          column(6, "Blabla"),
+          column(
+            3,
+            img(
+              class = "img-polaroid",
+              src = paste0(
+                "http://upload.wikimedia.org/",
+                "wikipedia/commons/9/92/",
+                "1919_Ford_Model_T_Highboy_Coupe.jpg"
+              )
+            ),
+            tags$small(
+              "Source: Photographed at the Bay State Antique ",
+              "Automobile Club's July 10, 2005 show at the ",
+              "Endicott Estate in Dedham, MA by ",
+              a(href = "http://commons.wikimedia.org/wiki/User:Sfoskett",
+                "User:Sfoskett")
+            )
+          )
+        )
+      )
+    )
+  ))
+
+# Define server logic required to draw a histogram
+server <- function(input, output, session) {
+  #record_heatmap(
+  #  trigger = reactive(input$navbar),
+  #  target = "body"
+  #)
+  download_heatmap(trigger = reactive(input$navbar))
+  
+  output$plot <- renderPlot({
+    plot(cars, type=input$plotType)
+  })
+  
+  output$summary <- renderPrint({
+    summary(cars)
+  })
+  
+  output$table <- DT::renderDataTable({
+    DT::datatable(cars)
+  })
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+
+```
+
 ### Options
 
 `{shinyHeatmap}` allows to tweak the heatmap style with few lines of code. This may

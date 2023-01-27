@@ -5,14 +5,19 @@
 \title{Record heatmap data to a file}
 \usage{
 record_heatmap(
+  trigger = NULL,
   path = "www",
   target = ".container-fluid",
   type = c("click", "move"),
   timeout = 10,
-  session = shiny::getDefaultReactiveDomain()
+  session = shiny::getDefaultReactiveDomain(),
+  ...
 )
 }
 \arguments{
+\item{trigger}{Reactive trigger to initialized the heatmap
+recording. This is useful if your app contains tabs or navbar.}
+
 \item{path}{Previously saved heatmap data for persistence.}
 
 \item{target}{Container selector hosting the heatmap canvas.
@@ -25,6 +30,8 @@ you use another template.}
 Expressed in milliseconds.}
 
 \item{session}{Shiny session object. Useful to store heatmap data.}
+
+\item{...}{Internal. Don't use.}
 }
 \description{
 On the JS side, Shiny creates a input$heatmap_data

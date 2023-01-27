@@ -8,8 +8,7 @@
 
 server <- function(input, output, session) {
   
-  #record_heatmap(target = "body")
-  download_heatmap(target = "body")
+  process_heatmap(target = "body")
   
   # initialise the app state with the default STATE_NOTHING_SELECTED
   app_state <- reactiveValues(

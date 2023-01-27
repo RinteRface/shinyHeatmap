@@ -109,8 +109,7 @@ ui <- with_heatmap(
 
 server <- function(input, output, session) {
   
-  #record_heatmap(target = ".wrapper")
-  download_heatmap(target = ".wrapper")
+  process_heatmap(target = ".wrapper")
   
   # Route select input box
   output$routeSelect <- renderUI({

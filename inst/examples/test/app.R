@@ -52,7 +52,7 @@ ui <- with_heatmap(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-  #record_heatmap()
+  process_heatmap()
   
   output$distPlot <- renderPlot({
     # generate bins based on input$bins from ui.R
@@ -62,9 +62,6 @@ server <- function(input, output, session) {
     # draw the histogram with the specified number of bins
     hist(x, breaks = bins, col = 'darkgray', border = 'white')
   })
-  
-  #download_heatmap(show_ui = FALSE)
-  download_heatmap()
 }
 
 # Run the application 

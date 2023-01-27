@@ -4,13 +4,13 @@
 \alias{get_heatmap}
 \title{Get heatmap from running Shiny app.}
 \usage{
-get_heatmap(url, options = NULL)
+get_heatmap(url, shiny_options = NULL)
 }
 \arguments{
 \item{url}{Shiny app url. Can be localhost or
 server deployed app.}
 
-\item{options}{Extra options to pass to shinytest2.}
+\item{shiny_options}{Extra options to pass to shinytest2.}
 }
 \value{
 Run the Shiny app with heatmap display.

@@ -205,7 +205,7 @@ server <- function(input, output, session) {
   #)
   #download_heatmap(trigger = reactive(input$navbar))
   
-  process_heatmap(trigger = reactive(input$navbar))
+  process_heatmap(trigger = reactive(input$navbar), target = "body")
   
   output$plot <- renderPlot({
     plot(cars, type=input$plotType)

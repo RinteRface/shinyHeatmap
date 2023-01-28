@@ -34,6 +34,12 @@
     <loc>https://rinterface.github.io/shinyHeatmap/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://rinterface.github.io/shinyHeatmap/reference/init_heatmap_storage.html</loc>
+  </url>
+  <url>
+    <loc>https://rinterface.github.io/shinyHeatmap/reference/process_heatmap.html</loc>
+  </url>
+  <url>
     <loc>https://rinterface.github.io/shinyHeatmap/reference/read_heatmap_records.html</loc>
   </url>
   <url>
@@ -41,6 +47,9 @@
   </url>
   <url>
     <loc>https://rinterface.github.io/shinyHeatmap/reference/take_heatmap_screenshot.html</loc>
+  </url>
+  <url>
+    <loc>https://rinterface.github.io/shinyHeatmap/reference/validate_heatmap_trigger.html</loc>
   </url>
   <url>
     <loc>https://rinterface.github.io/shinyHeatmap/reference/with_heatmap.html</loc>

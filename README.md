@@ -34,6 +34,12 @@ You should give it a try! If you're concerned about data privacy, `{shinyHeatmap
 </style>
 <img src="man/figures/shinyHeatmap-ui.gif" class="center">
 
+## Demo
+
+The recoding app is deployed [here](https://dgranjon.shinyapps.io/shinyHeatmap-navbar).
+Browse to [here](https://dgranjon.shinyapps.io/shinyHeatmap-navbar?get_heatmap) to get
+the heatmap.
+
 ## Examples
 
 ### {shiny}

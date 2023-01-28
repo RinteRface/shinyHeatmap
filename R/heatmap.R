@@ -203,7 +203,10 @@ download_heatmap <- function(
   })
   
   # Just show the date of the selected recording
-  observeEvent(session$input$heatmap_date, {
+  observeEvent({
+    req(length(heatmap_files()) > 0)
+    session$input$heatmap_date
+  }, {
     # Bug in Shiny sliderInput with timezone
     # always returns UTC no matter the provided time...
     # We have to reconvert
@@ -228,7 +231,10 @@ download_heatmap <- function(
   })
   
   # Process data, init canvas, show heatmap
-  observeEvent(session$input$heatmap_date, {
+  observeEvent({
+    req(length(heatmap_files()) > 0)
+    session$input$heatmap_date
+  }, {
     # Read and process data with current screensize
     processed_data <- read_heatmap_records(
       heatmap_files()[1:session$input$heatmap_date],

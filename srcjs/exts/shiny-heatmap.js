@@ -1,5 +1,6 @@
 import 'shiny';
 import $ from "jquery";
+import swal from 'sweetalert';
 
 function exportViewportDims() {
   Shiny.setInputValue(
@@ -26,6 +27,14 @@ $(document).ready(function(){
   
   $(window).resize(function() {
     exportViewportDims();
+  });
+  
+  Shiny.addCustomMessageHandler('no-logs', function(m) {
+    swal({
+      title: 'Oups!',
+      text: 'Cannot show any heatmap data. Not enough logs on this page ...',
+      icon: 'error'
+    });
   });
   
   Shiny.addCustomMessageHandler('initialize_container', function(m) {

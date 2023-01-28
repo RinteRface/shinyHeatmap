@@ -88,15 +88,11 @@ download_heatmap_ui <- function() {
 #' @return A vector containing full path to recordings.
 #' @keywords internal
 get_heatmap_records <- function(path) {
-  tmp_files <- list.files(
+  list.files(
     path, 
     pattern = "heatmap.*\\.json", 
     full.names = TRUE
   )
-  if (length(tmp_files) < 2) {
-    stop("You should have at least 2 recordings.")
-  }
-  tmp_files
 }
 
 #' Read and aggregate heatmap records

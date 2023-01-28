@@ -169,6 +169,13 @@ download_heatmap <- function(
     get_heatmap_records(data_path())
   })
   
+  # If no logs, we show an alert to the user
+  observeEvent(heatmap_files(), {
+    if (length(heatmap_files()) == 0) {
+      session$sendCustomMessage("no-logs", TRUE)
+    }
+  })
+  
   target <- reactive({
     readLines(file.path(data_path(), "target.txt"))
   })
@@ -182,7 +189,10 @@ download_heatmap <- function(
   })
   
   # Populate date select input based on recorded files
-  observeEvent(heatmap_files(), {
+  observeEvent({
+    req(length(heatmap_files()) > 0)
+    heatmap_files()
+  }, {
     updateSliderInput(
       session,
       "heatmap_date",

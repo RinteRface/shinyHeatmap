@@ -1,5 +1,9 @@
 # shinyHeatmap 0.2.1.9000
 
+## New feature
+- Add filter to select the platform where the app was accessed (mobile, desktop).
+This avoids to mix incompatible logs.
+
 ## Minor change
 - The slider to select dates has been replaced by a selectInput. We can display
 dates in the input choices which is easier to read (Note: the slider animation capability is lost).

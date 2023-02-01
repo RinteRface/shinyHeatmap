@@ -157,8 +157,10 @@ download_heatmap <- function(
     ...
 ) {
   validate_heatmap_trigger(trigger)
+  setup_pushbar()
   
   data_path <- reactive({
+    req(path)
     if (!is.null(trigger)) {
       path <- file.path(path, tolower(trigger()))
     }
@@ -169,18 +171,33 @@ download_heatmap <- function(
     get_heatmap_records(data_path())
   })
   
+  user_agents <- reactive({
+    req(length(heatmap_files() > 0))
+    unique(strsplit(heatmap_files(), "-")[[1]][2])
+  })
+  
+  observeEvent({
+    req(length(heatmap_files()) > 0)
+    user_agents()
+  }, {
+    updateSelectInput(
+      session, 
+      "user_agent", 
+      choices = user_agents(),
+      selected = user_agents()[[1]]
+    )
+  })
+  
   # If no logs, we show an alert to the user
   observeEvent(heatmap_files(), {
     if (length(heatmap_files()) == 0) {
       session$sendCustomMessage("no-logs", TRUE)
+    } else {
+      if (show_ui) {
+        pushbar_open(id = "shiny-heatmap-ui")
+      }
     }
   })
-  
-  target <- reactive({
-    readLines(file.path(data_path(), "target.txt"))
-  })
-  
-  setup_pushbar()
   
   observeEvent(session$input$heatmapUITrigger, {
     if (show_ui) {
@@ -188,60 +205,15 @@ download_heatmap <- function(
     }
   })
   
-  # Populate date select input based on recorded files
-  observeEvent({
-    req(length(heatmap_files()) > 0)
-    heatmap_files()
-  }, {
-    updateSliderInput(
-      session,
-      "heatmap_date",
-      min = 1,
-      max = length(heatmap_files()),
-      value = length(heatmap_files())
-    )
+  # Necessary for the container initialization
+  target <- reactive({
+    readLines(file.path(data_path(), "target.txt"))
   })
   
-  # Just show the date of the selected recording
-  observeEvent({
-    req(length(heatmap_files()) > 0)
-    session$input$heatmap_date
-  }, {
-    # Bug in Shiny sliderInput with timezone
-    # always returns UTC no matter the provided time...
-    # We have to reconvert
-    selected_date <- as.POSIXct(
-      gsub(
-        "_", 
-        " ",
-        strsplit(
-          strsplit(
-            heatmap_files()[[session$input$heatmap_date]], 
-            "ts_"
-          )[[1]][2],
-          ".json"
-        )[[1]][1]
-      )
-    )
-    updateSliderInput(
-      session, 
-      "heatmap_date", 
-      label = sprintf("Latest date: %s", selected_date)
-    )
-  })
-  
-  # Process data, init canvas, show heatmap
-  observeEvent({
-    req(length(heatmap_files()) > 0)
-    session$input$heatmap_date
-  }, {
-    # Read and process data with current screensize
-    processed_data <- read_heatmap_records(
-      heatmap_files()[1:session$input$heatmap_date],
-      session$input$viewport_dims
-    )
-    
+  # Init heatmap container (once)
+  observeEvent(target(), {
     # Init heatmap container without tracking
+    Sys.sleep(timeout/1000 + 1)
     session$sendCustomMessage(
       "initialize_container", 
       list(
@@ -250,15 +222,66 @@ download_heatmap <- function(
         track = FALSE
       )
     )
+  }, once = TRUE)
+  
+  # Populate date select input based on recorded files.
+  observeEvent({
+    req(length(heatmap_files()) > 0)
+    heatmap_files()
+  }, {
+    dates <- seq_along(heatmap_files())
+    names(dates) <- as.POSIXct(
+      gsub(
+        "_", 
+        " ",
+        unlist(
+          strsplit(
+            vapply(
+              strsplit(
+                heatmap_files(), 
+                "ts_"
+              ), 
+              `[[`, 
+              2, 
+              FUN.VALUE = character(1)
+            ),
+            ".json"
+          )
+        )
+      )
+    )
     
-    Sys.sleep(timeout/1000 + 1)
+    updateSelectInput(
+      session,
+      "heatmap_date",
+      choices = dates,
+      selected = length(dates)
+    )
+  })
+  
+  # Read and process data with current screensize
+  processed_data <- reactive({
+    req(length(heatmap_files()) > 0)
+    req(session$input$viewport_dims, session$input$heatmap_date)
+    heatmap_date <- as.numeric(session$input$heatmap_date)
+    # avoids a weird issue where the updateSelectInput is not
+    # fast enough to update the value on the server side.
+    req(heatmap_date <= length(heatmap_files()))
     
+    read_heatmap_records(
+      heatmap_files()[1:heatmap_date],
+      session$input$viewport_dims
+    )
+  })
+  
+  # Process data and show heatmap
+  observeEvent(processed_data(), {
     # Add data to heatmap
     session$sendCustomMessage(
       "add_heatmap_data", 
       list(
         data = toJSON(
-          processed_data, 
+          processed_data(), 
           auto_unbox = TRUE, 
           pretty = TRUE
         ),
@@ -271,7 +294,7 @@ download_heatmap <- function(
     if (!show_ui) {
       take_heatmap_screenshot(filename, target())
     }
-  }, ignoreInit = TRUE)
+  })
   
   # Take screenshot
   if (show_ui) {
@@ -280,7 +303,6 @@ download_heatmap <- function(
     })
   }
 }
-
 
 #' Either record or show heatmap depending on
 #' configuration.

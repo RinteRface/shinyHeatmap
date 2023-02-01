@@ -1,10 +1,10 @@
 import 'shiny';
-import $ from "jquery";
+import $ from 'jquery';
 import swal from 'sweetalert';
 
 function exportViewportDims() {
   Shiny.setInputValue(
-    "viewport_dims", 
+    'viewport_dims', 
     {
       width: window.innerWidth,
       height: window.innerHeight
@@ -35,6 +35,9 @@ $(document).ready(function(){
       text: 'Cannot show any heatmap data. Not enough logs on this page ...',
       icon: 'error'
     });
+    if ($('#heatmapUITrigger').length > 0 && $('#toggleHeatmapTrigger').length > 0) {
+      $('#heatmapUITrigger, #toggleHeatmapTrigger').toggle();
+    } 
   });
   
   Shiny.addCustomMessageHandler('initialize_container', function(m) {
@@ -114,8 +117,12 @@ $(document).ready(function(){
     }
     
     // Show canvas each time data are updated
-    if($('.heatmap-canvas').is(':visible') === false) {
+    if ($('.heatmap-canvas').is(':visible') === false) {
       $('.heatmap-canvas').show();
+    }
+    
+    if ($('#heatmapUITrigger').is(':visible') === false) {
+      $('#heatmapUITrigger, #toggleHeatmapTrigger').show();
     }
     
     heatmap.setData({ data: m.data });

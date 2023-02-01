@@ -59,22 +59,12 @@ download_heatmap_ui <- function() {
     from = "bottom",
     id = "shiny-heatmap-ui",
     h1("shinyHeatmap UI"),
-    sliderInput(
+    selectInput(
       "heatmap_date", 
-      label = "Select dates to aggregate", 
-      min = 0, 
-      max = 1, 
-      value = 1, 
-      step = 1,
-      animate = animationOptions(
-        interval = 1000,
-        loop = FALSE,
-        playButton = NULL,
-        pauseButton = NULL
-      ),
-      ticks = FALSE
+      label = "Select a date",
+      choices = list()
     ),
-    verbatimTextOutput("txt_date"),
+    selectInput("user_agent", label = "Platform", choices = list()),
     actionButton("get_heatmap", "Get heatmap")
   )
 }

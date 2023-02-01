@@ -1,4 +1,4 @@
-# shinyHeatmap 0.2.0.9000
+# shinyHeatmap 0.2.0.9200
 
 ## New feature
 - Introducing `process_heatmap()`, a wrapper around `record_heatmap()`
@@ -17,6 +17,10 @@ Leave `trigger` NULL for one page apps. `trigger` expects a reactive expression 
 Instead, it is written in a file `www/*/target.txt` by `record_heatmap()`,
 and subsequently read by `record_heatmap()`. For old apps without this file,
 you can manually create one `touch www/<WHATEVER_SUBFOLDER>/target.txt` and type in the DOM selector value, for instance `.container-fluid`.
+
+## Minor change
+- The slider to select dates has been replaced by a selectInput. We can display
+dates in the input choices which is easier to read (Note: the slider animation capability is lost).
 
 # shinyHeatmap 0.0.0.9000
 

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">shinyHeatmap</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9200</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,16 +45,20 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0.9000" id="shinyheatmap-0209000">shinyHeatmap 0.2.0.9000<a class="anchor" aria-label="anchor" href="#shinyheatmap-0209000"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0.9200" id="shinyheatmap-0209200">shinyHeatmap 0.2.0.9200<a class="anchor" aria-label="anchor" href="#shinyheatmap-0209200"></a></h2>
 <div class="section level3">
-<h3 id="new-feature-0-2-0-9000">New feature<a class="anchor" aria-label="anchor" href="#new-feature-0-2-0-9000"></a></h3>
+<h3 id="new-feature-0-2-0-9200">New feature<a class="anchor" aria-label="anchor" href="#new-feature-0-2-0-9200"></a></h3>
 <ul><li>Introducing <code><a href="../reference/process_heatmap.html">process_heatmap()</a></code>, a wrapper around <code><a href="../reference/record_heatmap.html">record_heatmap()</a></code> and <code><a href="../reference/download_heatmap.html">download_heatmap()</a></code>. <code><a href="../reference/process_heatmap.html">process_heatmap()</a></code> will record the heatmap by default unless you specify a query parameter <code>?get_heatmap</code>, which will allow to display the results.</li>
 <li>You can now toggle the heatmap visibility while running <code><a href="../reference/record_heatmap.html">record_heatmap()</a></code> so as to be able to change page in multi-tabs apps. This is necessary because the heatmap z-index is set to the maximum and you can’t click anywhere else after, expect the toggle heatmap button.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="breaking-changes-0-2-0-9000">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0-9000"></a></h3>
+<h3 id="breaking-changes-0-2-0-9200">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0-9200"></a></h3>
 <ul><li>Added new <code>trigger</code> parameter for <code><a href="../reference/record_heatmap.html">record_heatmap()</a></code> and <code><a href="../reference/download_heatmap.html">download_heatmap()</a></code> as first parameters. This allows to record heatmaps for multi-tabs apps like with <code><a href="https://shiny.rstudio.com/reference/shiny/latest/navbarPage.html" class="external-link">shiny::navbarPage()</a></code> (See <code>inst/examples/navbar</code>). Leave <code>trigger</code> NULL for one page apps. <code>trigger</code> expects a reactive expression like <code>reactive(input$navbar)</code>.</li>
 <li>The <code>target</code> value is now removed from <code><a href="../reference/record_heatmap.html">record_heatmap()</a></code>. Instead, it is written in a file <code>www/*/target.txt</code> by <code><a href="../reference/record_heatmap.html">record_heatmap()</a></code>, and subsequently read by <code><a href="../reference/record_heatmap.html">record_heatmap()</a></code>. For old apps without this file, you can manually create one <code>touch www/&lt;WHATEVER_SUBFOLDER&gt;/target.txt</code> and type in the DOM selector value, for instance <code>.container-fluid</code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-change-0-2-0-9200">Minor change<a class="anchor" aria-label="anchor" href="#minor-change-0-2-0-9200"></a></h3>
+<ul><li>The slider to select dates has been replaced by a selectInput. We can display dates in the input choices which is easier to read (Note: the slider animation capability is lost).</li>
 </ul></div>
 </div>
     <div class="section level2">

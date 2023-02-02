@@ -116,8 +116,6 @@ $(document).ready(function(){
       $('body').append([$heatmapUITrigger, $toggleHeatmap]);
       // Don't forget to bind new shiny input
       Shiny.bindAll();
-      
-      $('.pushbar_overlay').css('z-index', 99998)
     }
     
     // Show canvas each time data are updated

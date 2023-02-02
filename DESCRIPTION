@@ -1,6 +1,6 @@
 Package: shinyHeatmap
 Title: Usage Heatmap for Shiny apps
-Version: 0.2.1.9000
+Version: 0.2.2.9000
 Authors@R: 
     person("David", "Granjon", , "dgranjon@ymail.com", role = c("aut", "cre"))
 Description: Have you ever wondered how people are enjoying your Shiny app?

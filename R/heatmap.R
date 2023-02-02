@@ -212,8 +212,6 @@ download_heatmap <- function(
   
   # Init heatmap container (once)
   observeEvent(target(), {
-    # Init heatmap container without tracking
-    Sys.sleep(timeout/1000 + 1)
     session$sendCustomMessage(
       "initialize_container", 
       list(

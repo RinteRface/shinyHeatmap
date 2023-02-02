@@ -41,6 +41,8 @@ $(document).ready(function(){
   });
   
   Shiny.addCustomMessageHandler('initialize_container', function(m) {
+    // Set timeout to wait for a given time. Useful if the app 
+    // takes time to load and DOM elements are not all here.
     setTimeout(function() {
       heatmapContainer = document.querySelector(m.target);
       if (!!m.track) {
@@ -78,7 +80,7 @@ $(document).ready(function(){
         $heatmapUITrigger.css({
           position: 'fixed',
           top: '20px',
-          right: '140px',
+          right: '180px',
           height: '40px',
           'border-radius': '5px',
           'z-index': '99999',
@@ -114,6 +116,8 @@ $(document).ready(function(){
       $('body').append([$heatmapUITrigger, $toggleHeatmap]);
       // Don't forget to bind new shiny input
       Shiny.bindAll();
+      
+      $('.pushbar_overlay').css('z-index', 99998)
     }
     
     // Show canvas each time data are updated
@@ -131,8 +135,9 @@ $(document).ready(function(){
   });
   
   // set z-index to make sure it is always visible
-  // Must be below the download button with 99999 z-index.
+  // Must be below the download button with 99999 z-index and
+  // the pushbar_overlay with 99998 z-index.  
   $(document).on('heatmap-added', function(m) {
-    $(".heatmap-canvas").css("z-index", 99998);
+    $(".heatmap-canvas").css("z-index", 99997);
   });
 });

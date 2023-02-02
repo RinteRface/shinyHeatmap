@@ -1,3 +1,10 @@
+# shinyHeatmap 0.2.2.9000
+
+## Minor change
+- Adjust z-index for pushar overlay, pushbar and heatmap canvas.
+- Remove delay in R code.
+- More space between heatmap buttons (toggle and options).
+
 # shinyHeatmap 0.2.1.9000
 
 ## New feature

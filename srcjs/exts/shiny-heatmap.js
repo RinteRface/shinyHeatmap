@@ -68,6 +68,12 @@ $(document).ready(function(){
   Shiny.addCustomMessageHandler('add_heatmap_data', function(m) {
     // don't recreate new container if it exists
     if (window.heatmap === undefined) {
+      swal({
+        title: 'Welcome!',
+        text: 'Preview the usage data of your app. ',
+        icon: 'success'
+      });
+      
       heatmapConfig = m.options || {};
       heatmapConfig.container = heatmapContainer;
       heatmap = h337.create(heatmapConfig);

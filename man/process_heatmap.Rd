@@ -2,8 +2,7 @@
 % Please edit documentation in R/heatmap.R
 \name{process_heatmap}
 \alias{process_heatmap}
-\title{Either record or show heatmap depending on
-configuration.}
+\title{Either record or show heatmap data}
 \usage{
 process_heatmap(...)
 }
@@ -13,9 +12,11 @@ process_heatmap(...)
 }
 \description{
 By default, \link{process_heatmap} records the heatmap.
-However, if you set \code{options("shinyheatmap.mode" = 'display')},
-the function will run in display mode to see the results.
-This is useful if you want to use shinytest2 to control
-the app and display the results without affecting the deployed
-production app.
+However, if you browse to the app url and add \code{?get_heatmap} query string,
+the function will run in display mode to see the heatmap data.
+}
+\note{
+Specify \code{options("shinyHeatmap.debug" = TRUE)} to
+get useful debugging messages, particularly when setting up
+your heatmap.
 }

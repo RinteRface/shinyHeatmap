@@ -1,6 +1,14 @@
 # shinyHeatmap 0.2.2.9000
 
 ## Minor change
+- Add welcome notification in preview mode.
+- Correct `process_heatmap()` doc.
+- Add `options("shinyHeatmap.debug" = TRUE)` to display useful debugging messages. Only
+for developers.
+
+# shinyHeatmap 0.2.2.9000
+
+## Minor change
 - Adjust z-index for pushbar and heatmap canvas.
 - Remove delay in R code.
 - More space between heatmap buttons (toggle and options).

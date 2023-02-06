@@ -64,6 +64,7 @@ record_heatmap <- function(
       init_heatmap_storage(session, trigger)
     }
     storage_initialized(TRUE)
+    if (getOption("shinyHeatmap.debug")) showNotification("Storage initialized...")
   }, priority = 1)
   
   # Init heatmap container with tracking enabled
@@ -79,6 +80,7 @@ record_heatmap <- function(
         track = TRUE
       )
     )
+    if (getOption("shinyHeatmap.debug")) showNotification("Canvas initialized...")
   })
   
   # Record new data at each click or move on the DOM
@@ -130,6 +132,7 @@ record_heatmap <- function(
     
     # update JSON file
     write(data_to_save, file_path)
+    if (getOption("shinyHeatmap.debug")) showNotification("New data added...")
   })
 }
 
@@ -220,6 +223,7 @@ download_heatmap <- function(
         track = FALSE
       )
     )
+    if (getOption("shinyHeatmap.debug")) showNotification("Canvas initialized...")
   }, once = TRUE)
   
   # Populate date select input based on recorded files.
@@ -288,6 +292,8 @@ download_heatmap <- function(
       )
     )
     
+    if (getOption("shinyHeatmap.debug")) showNotification("Reading data...")
+    
     # Automatically download screenshot if UI not visible
     if (!show_ui) {
       take_heatmap_screenshot(filename, target())
@@ -302,15 +308,15 @@ download_heatmap <- function(
   }
 }
 
-#' Either record or show heatmap depending on
-#' configuration.
+#' Either record or show heatmap data
 #' 
 #' By default, \link{process_heatmap} records the heatmap.
-#' However, if you set \code{options("shinyheatmap.mode" = 'display')},
-#' the function will run in display mode to see the results.
-#' This is useful if you want to use shinytest2 to control
-#' the app and display the results without affecting the deployed 
-#' production app.
+#' However, if you browse to the app url and add \code{?get_heatmap} query string,
+#' the function will run in display mode to see the heatmap data.
+#' 
+#' @note Specify \code{options("shinyHeatmap.debug" = TRUE)} to
+#' get useful debugging messages, particularly when setting up
+#' your heatmap.
 #' 
 #' @param ... Pass in parameters for \link{record_heatmap} and
 #' \link{download_heatmap}.

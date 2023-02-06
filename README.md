@@ -36,9 +36,11 @@ You should give it a try! If you're concerned about data privacy, `{shinyHeatmap
 
 ## Demo
 
-The recoding app is deployed [here](https://dgranjon.shinyapps.io/shinyHeatmap-navbar).
-Browse to [here](https://dgranjon.shinyapps.io/shinyHeatmap-navbar?get_heatmap) to get
-the heatmap.
+The recording app is deployed [here](https://dgranjon.shinyapps.io/shinyHeatmap-navbar). Once
+you played a bit with this apps, browse to [here](https://dgranjon.shinyapps.io/shinyHeatmap-navbar?get_heatmap) to get
+the heatmap data points. Please not that the demo is running on shinyapps.io. As a result,
+the data storage is ephemeral (not persistent: data will be reset each time the apps
+become idle). See [here](https://docs.posit.co/shinyapps.io/Storage.html) for more details.
 
 ## Examples
 

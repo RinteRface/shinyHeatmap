@@ -1,4 +1,4 @@
-# shinyHeatmap 0.2.2.9000
+# shinyHeatmap 0.2.3.9000
 
 ## Minor change
 - Add welcome notification in preview mode.

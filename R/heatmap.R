@@ -336,6 +336,11 @@ process_heatmap <- function(...) {
   # process_heatmap is called in server.R
   session <- get("session", envir = parent.frame(n = 1))
   
+  # Init global option
+  if (is.null(getOption("shinyHeatmap.debug"))) {
+    options("shinyHeatmap.debug" = FALSE)
+  }
+  
   # Trigger once
   observeEvent({
     session$clientData

@@ -1,57 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/404.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/download_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/download_heatmap_ui.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/get_heatmap_records.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/heatmap_deps.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/init_heatmap_storage.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/process_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/read_heatmap_records.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/record_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/take_heatmap_screenshot.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/validate_heatmap_trigger.html</loc>
-  </url>
-  <url>
-    <loc>https://rinterface.github.io/shinyHeatmap/reference/with_heatmap.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://rinterface.github.io/shinyHeatmap/404.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/LICENSE-text.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/LICENSE.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/authors.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/index.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/news/index.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/download_heatmap.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/download_heatmap_ui.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/get_heatmap_records.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/heatmap_deps.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/index.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/init_heatmap_storage.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/process_heatmap.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/read_heatmap_records.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/record_heatmap.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/take_heatmap_screenshot.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/validate_heatmap_trigger.html</loc></url>
+<url><loc>https://rinterface.github.io/shinyHeatmap/reference/with_heatmap.html</loc></url>
 </urlset>
+

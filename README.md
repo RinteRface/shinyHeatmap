@@ -34,13 +34,11 @@ You should give it a try! If you're concerned about data privacy, `{shinyHeatmap
 </style>
 <img src="man/figures/shinyHeatmap-ui.gif" class="center">
 
-## Demo
+## Note about shinyapps.io
 
-The recording app is deployed [here](https://dgranjon.shinyapps.io/shinyHeatmap-navbar). Once
-you played a bit with this apps, browse to [here](https://dgranjon.shinyapps.io/shinyHeatmap-navbar?get_heatmap) to get
-the heatmap data points. Please not that the demo is running on shinyapps.io. As a result,
+At the moment, shinyHeatmap writes on local files. As a result, whenever the app is deployed on shinyapps.io, 
 the data storage is ephemeral (not persistent: data will be reset each time the apps
-become idle). See [here](https://docs.posit.co/shinyapps.io/Storage.html) for more details.
+become idle, or redeployed ...). See [here](https://docs.posit.co/shinyapps.io/Storage.html) for more details.
 
 ## Examples
 
